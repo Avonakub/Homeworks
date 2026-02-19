@@ -298,8 +298,6 @@ elif chosen_task == '9':
         bmi = float(bmi_s)
         if not (18.5 <= bmi <= 24.9):
             count += 1
-        if bmi < 16 or bmi > 40:
-            print('Критически аномальный индекс массы тела!!!')
     else:
         count_error = count_error + '- ИМТ: некорректное число\n'
 
@@ -331,7 +329,7 @@ elif chosen_task == '9':
         print(count_error)
 
     else:
-        if (count >= 4) or (smoke == 'да' and age > 60):
+        if (count >= 4) or (smoke == 'да' and age > 60) or (bmi < 16 or bmi > 40):
             print('Критический риск')
         elif count >= 3:
             print('Высокий риск')
