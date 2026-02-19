@@ -265,31 +265,43 @@ elif chosen_task == '9':
 
     # Счетчик для подсчета кол-ва риск факторов
     count = 0
+    count_error = ''
 
-    if cholesterol_s.replace('.', '', 1).isdigit():
+    if (cholesterol_s.replace('.', '', 1).isdigit()
+            and cholesterol_s.count('.') <= 1
+            and not (cholesterol_s.startswith('.') or cholesterol_s.endswith('.'))):
         cholesterol = float(cholesterol_s)
-        if cholesterol > 5.2:
-            count += 1
-        if cholesterol > 6.5:  # усилим риск при очень высоком уровне
-            count += 1
+        if cholesterol <= 0:
+            count_error = count_error + '- Холестерин: число должно быть больше 0\n'
+        else:
+            if cholesterol > 5.2:
+                count += 1
+            if cholesterol > 6.5:  # усилим риск при очень высоком уровне
+                count += 1
     else:
-        print('Холестерин: некорректное число')
+        count_error = count_error + '- Холестерин: некорректное число\n'
 
-    if sugar_s.replace('.', '', 1).isdigit():
+    if (sugar_s.replace('.', '', 1).isdigit()
+            and sugar_s.count('.') <= 1
+            and not (sugar_s.startswith('.') or sugar_s.endswith('.'))):
         sugar = float(sugar_s)
-        if sugar > 5.5:
+        if sugar <= 0:
+            count_error = count_error + '- Сахар: значение должно быть больше 0\n'
+        elif sugar > 5.5:
             count += 1
     else:
-        print('Сахар: некорректное число')
+        count_error = count_error + '- Сахар: некорректное число\n'
 
-    if bmi_s.replace('.', '', 1).isdigit():
+    if (bmi_s.replace('.', '', 1).isdigit()
+            and bmi_s.count('.') <= 1
+            and not (bmi_s.startswith('.') or bmi_s.endswith('.'))):
         bmi = float(bmi_s)
         if not (18.5 <= bmi <= 24.9):
             count += 1
         if bmi < 16 or bmi > 40:
             print('Критически аномальный индекс массы тела!!!')
     else:
-        print('ИМТ: некорректное число')
+        count_error = count_error + '- ИМТ: некорректное число\n'
 
     if '/' in pressure_s:
         parts = pressure_s.split('/')
@@ -299,24 +311,34 @@ elif chosen_task == '9':
             if not (110 <= sys_bp <= 130 and 70 <= dia_bp <= 85):
                 count += 1
         else:
-            print('Давление: неверный формат, ожидается "верхнее/нижнее" целые числа')  # Срабатывает если / есть, но не числа
+            # Срабатывает если / есть, но не числа
+            count_error = count_error + '- Давление: неверный формат, ожидается "верхнее/нижнее" целые числа\n'  # Срабатывает если / есть, но не числа
     else:
-        print('Давление: неверный формат, ожидается "верхнее/нижнее" целые числа')  # Срабатывает если в строке нет символа /
+        # Срабатывает если в строке нет символа /
+        count_error = count_error + '- Давление: неверный формат, ожидается "верхнее/нижнее" целые числа\n'
 
     age = 0
     if age_s.isdigit():
         age = int(age_s)
     else:
-        print('Возраст: некорректное число')
+        count_error = count_error + '- Возраст: некорректное число\n'
 
-    if (count >= 4) or (smoke == 'да' and age > 60):
-        print('Критический риск')
-    elif count >= 3:
-        print('Высокий риск')
-    elif (1 <= count <= 2) or (age > 45):
-        print('Нормальный риск')
+    if smoke != 'да' and smoke != 'нет':
+        count_error = count_error + '- Курение: введите текстом "да" или "нет"\n'
+
+    if count_error != '':
+        print('Анализ невозможен! Список ошибок: ')
+        print(count_error)
+
     else:
-        print('Низкий риск')
+        if (count >= 4) or (smoke == 'да' and age > 60):
+            print('Критический риск')
+        elif count >= 3:
+            print('Высокий риск')
+        elif (1 <= count <= 2) or (age > 45) or smoke == 'да':
+            print('Нормальный риск')
+        elif count == 0 and smoke == 'нет':
+            print('Низкий риск')
 
 elif chosen_task == '10':
     print('Простой калькулятор с быстрыми методами (* на 15, * на 11, особые случаи).')
