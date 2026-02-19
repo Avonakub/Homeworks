@@ -26,11 +26,12 @@ if chosen_task == '1':
     if login.lower() in password.lower():  # Через in проверка не входит ли часть имени в пароль, lower сравняет регистр
         all_errors = all_errors + '- Пароль содержит часть логина!\n'
         errors_count += 1
-    if password.islower() or password.isupper():  # Проверяем, что содержит строчные и заглавные. Если нет ошибка.
-        all_errors = all_errors + '- Пароль должен содержать строчные и заглавные буквы!\n'
-        errors_count += 1
-    if password.isalpha():
-        all_errors = all_errors + '- Пароль должен содержать цифры!\n'
+    if any(letter.isalpha() for letter in password):  # проверяем есть ли хоть 1 подходящий элемент в строке
+        if password.islower() or password.isupper():  # Проверяем, что содержит строчные и заглавные. Если нет ошибка.
+            all_errors = all_errors + '- Пароль должен содержать минимум 1 строчную и 1 заглавную букву!\n'
+            errors_count += 1
+    if not any(numbers.isdigit() for numbers in password):
+        all_errors = all_errors + '- Пароль должен содержать минимум 1 цифру!\n'
         errors_count += 1
     if password.isalnum():
         all_errors = all_errors + '- Пароль должен содержать специальные символы!'
@@ -41,6 +42,7 @@ if chosen_task == '1':
         print('Регистрация не выполнена. В вашем пароле найдены ошибки:')
         print(all_errors)  # Счетчик выводит все найденные ошибки
         print('Повторите попытку')
+
 elif chosen_task == '2':
     print("Введите длины сторон треугольника для проверки его существования")
     a = input('Введите 1-ю сторону треугольника: ').strip()
@@ -118,6 +120,7 @@ elif chosen_task == '5':
                 print('Эти клетки РАЗНОГО цвета')
         else:
             print('ОШИБКА! Введите координаты от 1 до 8. Повторите попытку!')
+
 elif chosen_task == '6':
     print('Координаты точки на плоскости')
     x = input('Введите координату по оси x: ').strip()
