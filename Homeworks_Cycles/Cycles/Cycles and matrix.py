@@ -39,18 +39,26 @@ while is_continue:
         else:  # Если в строке были буквы, isdigit выдаст фолс и сработает этот блок
             print("Error: Please enter only numbers (letters are not allowed)!")
 
+    elif user_choice == '2':
+        value = input("Enter an integer for the Fibonacci number sequence: ")
+        if value.isdigit():
+            value = int(value)
+            if value <= 0:  # Последовательность может быть только больше 0
+                print("Please enter a number greater than 0.")
+            else:
+                fibonacci_sequence = []  # Создаем список, чтобы хранить последовательность
+                a, b = 0, 1  # Задаем переменные, а - текущее, б - следующее
+                for _ in range(value):
+                    fibonacci_sequence.append(a)  # Добавляем в список каждое новое значение а
+                    a, b = b, a + b  # а - первое число, б - это а плюс следующее (б)
+            # Преобразуем в стр, потому что склейка только со строками. Склеиваем через запятую
+            print(f"Sequence show is it: {', '.join(map(str, fibonacci_sequence))}.")
+        else:
+            print("Error: Please enter only numbers (letters are not allowed)!")
 
 
 
 
-
-
-
-    #
-    # elif user_choice == '2':
-    #     first_value = int(input("First value:"))
-    #     second_value = int(input("Second value:"))
-    #     print(f"Sum is: {first_value + second_value}")
     # elif user_choice == '3':
     #     number = int(input("Enter a value: "))
     #     result = 1
