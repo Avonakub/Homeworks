@@ -56,15 +56,48 @@ while is_continue:
         else:
             print("Error: Please enter only numbers (letters are not allowed)!")
 
+    elif user_choice == '3':
+        numbers = []  # Создаем пустой список, чтобы складывать туда числа
+        user_input = "start"  # Вводим любое значение, чтобы цикл мог начаться
+        print("Enter the numbers one at a time. To finish, just press Enter ➤ ")
+
+        while user_input != "":  # Цикл работает, пока пользователь не нажмет Enter на пустой строке
+            user_input = input("Enter number: ")
+            # Используем try для защиты от букв и неправильных символов и заменяем проверку методам строк с ифами
+            try:
+                # Проверка на корявые числа типа 076, -08765. Убираем с лишними нулями и -0
+                # Но разрешаем корректные дроби (0.5, -0.2) через проверку точки
+                if user_input.startswith('0') and len(user_input) > 1 and user_input[1] != '.'\
+                        or user_input.startswith('-0') and len(user_input) > 2 and user_input[2] != '.':
+                    print("Error: Number cannot start with zero (except 0.86 or -0.86)!")
+                # Если ввод прошел проверку на нули, пробуем превратить его в число
+                else:
+                    numbers.append(float(user_input))  # float() сам поймет и минус, и точку, и целое число
+            except ValueError:
+                # Проверяем, что ошибка вызвана не простым нажатием Enter для выхода
+                if user_input != "":
+                    print("Error: Please enter a valid number!")
+        if numbers:
+            total_sum = 0  # Создаем сумматор для складывания
+
+            # Начинаем поиск мин/макс с первого элемента списка нулевой индекс
+            min_val = numbers[0]
+            max_val = numbers[0]
+            for number in numbers:
+                total_sum += number
+                if number < min_val:  # Если нашли число меньше текущего минимума, то пишем его в мин
+                    min_val = number
+
+                if number > max_val:  # Если нашли число больше текущего максимума, то пишем его в макс
+                    max_val = number
+            print(f"Sum of number: {total_sum:.2f}. Minimum number: {min_val}. Maximum number: {max_val}. ")
+        else:  # Вывод, если ни одно значение в список не попало
+            print("Error: List is empty!")
 
 
 
-    # elif user_choice == '3':
-    #     number = int(input("Enter a value: "))
-    #     result = 1
-    #     for i in range(2, number + 1):
-    #         result *= i
-    #     print(f"{number}! = {result}")
+
+
     # elif user_choice == '4':
     #     is_continue = False
     # else:
