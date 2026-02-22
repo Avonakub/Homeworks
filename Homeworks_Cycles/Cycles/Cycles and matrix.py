@@ -276,5 +276,27 @@ while is_continue:
         except ValueError:
                 print("Error: Invalid input! Please enter a valid integer number.")
 
+    elif user_choice == '8':
+        some_str = input("Enter a string: ").lower()
+        # Создаем список гласных для русс. и англ. букв
+        vowels = ['a', 'e', 'i', 'o', 'u', 'y', 'а', 'е', 'ё', 'и', 'о', 'у', 'ы', 'э', 'ю', 'я']
+        v_count = 0
+        c_count = 0
+
+        for item in some_str:
+            if item.isalpha():  # Проверяем, что в строке это буква
+                if item in vowels:  # Если буква есть в списке гласных, плюсуем к счетчику гласных
+                    v_count += 1
+                else:  # Если это буква, но ее нет в списке гласных, плюсуем к счетчику согласных
+                    c_count += 1
+        print(f"Original string: {some_str}")
+        print(f"Vowels: {v_count}")
+        print(f"Consonants: {c_count}")
+
+
+
+
+
+
 
     # print("=" * 50)
