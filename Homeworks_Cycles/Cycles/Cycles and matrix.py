@@ -179,7 +179,63 @@ while is_continue:
         else:
             print("The list is empty.")
 
+    elif user_choice == '6':
+        numbers = []
+        user_input = "start"
+        print("Enter the numbers one at a time. To finish, just press Enter ➤ ")
+        while user_input != "":
+            user_input = input("Enter number: ")
+            if user_input != "":
+                try:
+                    if (user_input.startswith('0') and len(user_input) > 1 and user_input[1] != '.') or \
+                            (user_input.startswith('-0') and len(user_input) > 2 and user_input[2] != '.'):
+                        print("Error: Number cannot start with zero!")
+                    else:
+                        numbers.append(float(user_input))
+                except ValueError:
+                    print("Error: Please enter a valid number!")
 
+        if numbers:
+            # Список не сортируем
+            print(f"Current list: {numbers}")
+            try:
+                target = float(input("Enter the number to find: "))
+                low = 0
+                high = len(numbers) - 1
+                steps = 0
+                found_index = -1
 
+                while low <= high and found_index == -1:
+                    steps += 1
+                    mid = (low + high) // 2
+
+                    if numbers[mid] == target:
+                        found_index = mid
+
+                    # Проверяем, отсортирована ли левая часть
+                    elif numbers[low] <= numbers[mid]:
+                        # Если цель находится внутри этой "правильной" левой части
+                        if numbers[low] <= target < numbers[mid]:
+                            high = mid - 1  # Ищем слева
+                        else:
+                            low = mid + 1  # Ищем справа
+
+                    # Иначе отсортирована правая часть
+                    else:
+                        # Если цель находится внутри этой "правильной" правой части
+                        if numbers[mid] < target <= numbers[high]:
+                            low = mid + 1  # Ищем справа
+                        else:
+                            high = mid - 1  # Ищем слева
+
+                if found_index != -1:
+                    print(f"Number found at index {found_index}.")
+                else:
+                    print("Number not found in the list.")
+                print(f"Steps taken: {steps}")
+            except ValueError:
+                print("Error: Invalid input for search.")
+        else:
+            print("The list is empty.")
 
     # print("=" * 50)
