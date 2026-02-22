@@ -133,6 +133,51 @@ while is_continue:
         else:  # Вывод, если ни одно значение в список не попало
             print("Error: List is empty!")
 
+    elif user_choice == '5':
+        numbers = []
+        user_input = "start"
+        print("Enter the numbers one at a time. To finish, just press Enter ➤ ")
+        while user_input != "":
+            user_input = input("Enter number: ")
+            if user_input != "":
+                try:
+                    if (user_input.startswith('0') and len(user_input) > 1 and user_input[1] != '.') or \
+                            (user_input.startswith('-0') and len(user_input) > 2 and user_input[2] != '.'):
+                        print("Error: Number cannot start with zero!")
+                    else:
+                        numbers.append(float(user_input))
+                except ValueError:
+                    print("Error: Please enter a valid number!")
+
+        if numbers:
+            numbers.sort()  # Сортируем список
+            print(f"Sorted list: {numbers}")
+            try: # Запрашиваем число для поиска
+                target = float(input("Enter the number to find: "))
+                low = 0  # Левая граница поиска
+                high = len(numbers) - 1  # Правая граница поиска
+                steps = 0  # Счетчик шагов
+                found_index = -1  # -1 означает, что число еще не найдено
+
+                while low <= high and found_index == -1:
+                    steps += 1
+                    mid = (low + high) // 2  # Находим индекс среднего эелемента
+
+                    if numbers[mid] == target:      # Проверяем, совпадает ли число в центре
+                        found_index = mid           # Запоминаем индекс и выходим из цикла
+                    elif numbers[mid] < target:     # Если меньше двигаемся вправо
+                        low = mid + 1               # Сдвигаем левую границу вправо (отсекаем левую часть)
+                    else:                           # Если больше двигаемся влево
+                        high = mid - 1              # Сдвигаем правую границу влево (отсекаем правую часть)
+                if found_index != -1:
+                    print(f"Number found at index {found_index}.")
+                else:
+                    print("Number not found in the list.")
+                print(f"Steps taken: {steps}")
+            except ValueError:
+                print("Error: Invalid input for search.")
+        else:
+            print("The list is empty.")
 
 
 
