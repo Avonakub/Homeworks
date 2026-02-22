@@ -238,4 +238,43 @@ while is_continue:
         else:
             print("The list is empty.")
 
+    elif user_choice == '7':
+        from random import randint
+
+        try:
+            # Запросили размеры матрицы и сразу перевели в инт
+            rows_number = int(input("Enter rows number: "))
+            columns_number = int(input("Enter columns number: "))
+
+            # Проверили, что строка и столбец положительные
+            if rows_number > 0 and columns_number > 0:
+                matrix = []  # Создали пустой каркас
+
+                # Генерим матрицу
+                for r_num in range(0, rows_number):
+                    empty_row = []  # Создаем временный пустой список для строки
+                    matrix.append(empty_row)  # Добавляем пустой список в матрицу
+                    for c_num in range(0, columns_number):
+                        elem = randint(0, 100) # Генерим случайное число до 100
+                        matrix[r_num].append(elem) # Закидываем элемент в пустую строку
+                    print(matrix[r_num])
+
+                # Матрица должна быть квадратной
+                if rows_number == columns_number:
+                    summa = 0
+                    for r_num in range(rows_number):
+                        # Индекс последнего столбца минус номер строки
+                        c_num = (columns_number - 1) - r_num
+                        summa += matrix[r_num][c_num]
+
+                    print(f"Sum of side diagonal (top-right to bottom-left) is: {summa}")
+                else:
+                    print("Error: Matrix must be square (rows == columns) for diagonal!")
+            else:
+                print("Error: Numbers must be greater than 0!")
+
+        except ValueError:
+                print("Error: Invalid input! Please enter a valid integer number.")
+
+
     # print("=" * 50)
