@@ -350,19 +350,27 @@ while is_continue:
         except ValueError:
             print("Error: Invalid input! Please enter a valid integer.")
 
-    # elif user_choice == '11':
-    #     try:
-    #         user_input = input("Enter a number to check: ")
-    #         # Проверяем, что введено положительное целое число
-    #         if user_input.isdigit() and int(user_input) >= 0:
-    #             num = int(user_input)
-    #
-    #             power = len(user_input)  # Считаем количество цифр шоб понять какая степень
-
-
-
-
-
+    elif user_choice == '11':
+        try:
+            user_input = input("Enter a number to check: ")
+            num = int(user_input)
+            # Проверяем, что введено положительное целое число
+            if num >= 0:
+                # Считаем количество цифр, чтобы понять какая степень
+                power = len(user_input)
+                sum_armstrong = 0  # Счетчик суммы сразу на ноль
+                for item in user_input:  # Берем строку и достаем каждый символ
+                    digit = int(item)  # Превращаем символ в цифру
+                    result = digit ** power  # Возводим в степень
+                    sum_armstrong += result  # Плюсуем к общей сумме
+                if sum_armstrong == num:  # Если сумма в степенях равна числу, то Армстронг
+                    print(f"Yes, {num} is an Armstrong number!")
+                else:
+                    print(f"No, {num} is not an Armstrong number.")
+            else:
+                print("Error: Numbers must be positive!")
+        except ValueError:
+            print("Error: Invalid input! Please enter a valid integer.")
 
     elif user_choice == '12':
         try:
