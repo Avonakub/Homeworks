@@ -293,7 +293,28 @@ while is_continue:
         print(f"Vowels: {v_count}")
         print(f"Consonants: {c_count}")
 
+    elif user_choice == '9':
 
+        try:
+            num = int(input("Enter a number: "))
+            if num > 0:  # Простое число больше нуля, отсекаем отрицательные и ноль
+                count = 0  # Счетчик сколько раз число разделилось без остатка
+                i = 1  # Начинаем проверку с единицы, так как каждое простое число должно делиться на 1
+
+                # Проверяем все числа от 1 до самого num
+                while i <= num:  # Прогоняем от 1 до нашего числа
+                    if num % i == 0:  # Если делится на i без остатка плюсуем к счетчику делитель
+                        count += 1
+                    i += 1  # Переходим к следующему числу, чтобы цикл не завис на единице
+                # У простого числа может быть только 2 делителя (1 и оно само)
+                if count == 2:  # Если делителя два, число простое
+                    print(f"The number {num} is prime!")
+                else:  # Иначе не простое
+                    print(f"The number {num} is not prime.")
+            else:
+                print("Error: Numbers must be greater than 0!")
+        except ValueError:
+            print("Error: Invalid input! Please enter a valid integer.")
 
 
 
