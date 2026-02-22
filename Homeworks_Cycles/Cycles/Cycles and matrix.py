@@ -63,20 +63,19 @@ while is_continue:
 
         while user_input != "":  # Цикл работает, пока пользователь не нажмет Enter на пустой строке
             user_input = input("Enter number: ")
-            # Используем try для защиты от букв и неправильных символов и заменяем проверку методам строк с ифами
-            try:
-                # Проверка на корявые числа типа 076, -08765. Убираем с лишними нулями и -0
-                # Но разрешаем корректные дроби (0.5, -0.2) через проверку точки
-                if user_input.startswith('0') and len(user_input) > 1 and user_input[1] != '.'\
-                        or user_input.startswith('-0') and len(user_input) > 2 and user_input[2] != '.':
-                    print("Error: Number cannot start with zero (except 0.86 or -0.86)!")
-                # Если ввод прошел проверку на нули, пробуем превратить его в число
-                else:
-                    numbers.append(float(user_input))  # float() сам поймет и минус, и точку, и целое число
-            except ValueError:
-                # Проверяем, что ошибка вызвана не простым нажатием Enter для выхода
-                if user_input != "":
-                    print("Error: Please enter a valid number!")
+            if user_input != "":  # Если не пустая строка идем дальше
+                # Используем try для защиты от букв и неправильных символов и заменяем проверку методам строк с ифами
+                try:
+                    # Проверка на корявые числа типа 076, -08765. Убираем с лишними нулями и -0
+                    # Но разрешаем корректные дроби (0.5, -0.2) через проверку точки
+                    if user_input.startswith('0') and len(user_input) > 1 and user_input[1] != '.'\
+                            or user_input.startswith('-0') and len(user_input) > 2 and user_input[2] != '.':
+                        print("Error: Number cannot start with zero (except 0.86 or -0.86)!")
+                    # Если ввод прошел проверку на нули, пробуем превратить его в число
+                    else:
+                        numbers.append(float(user_input))  # float() сам поймет и минус, и точку, и целое число
+                except ValueError:
+                        print("Error: Please enter a valid number!")
         if numbers:
             total_sum = 0  # Создаем сумматор для складывания
 
@@ -90,7 +89,47 @@ while is_continue:
 
                 if number > max_val:  # Если нашли число больше текущего максимума, то пишем его в макс
                     max_val = number
-            print(f"Sum of number: {total_sum:.2f}. Minimum number: {min_val}. Maximum number: {max_val}. ")
+            print(f"- Sum of number: {total_sum:.2f}\n"
+                  f"- Minimum number: {min_val:g}\n"
+                  f"- Maximum number: {max_val:g}")
+        else:  # Вывод, если ни одно значение в список не попало
+            print("Error: List is empty!")
+
+    elif user_choice == '4':
+        numbers = []  #
+        user_input = "start"
+        print("Enter the numbers one at a time. To finish, just press Enter ➤ ")
+
+        while user_input != "":
+            user_input = input("Enter number: ")
+            if user_input != "":
+                try:
+                    if user_input.startswith('0') and len(user_input) > 1 and user_input[1] != '.' \
+                            or user_input.startswith('-0') and len(user_input) > 2 and user_input[2] != '.':
+                        print("Error: Number cannot start with zero (except 0.86 or -0.86)!")
+                    else:
+                        numbers.append(float(user_input))
+                except ValueError:
+                        print("Error: Please enter a valid number!")
+        if numbers:
+            if len(numbers) == len(set(numbers)):
+                print(f"All numbers are unique.\n"
+                      f"Your list: {', '.join(map(str, numbers))}.")
+            # Иначе ищем дубликаты
+            else:
+                # Создаем списки тех, что уже видели и дубликатов
+                duplicates = []
+                seen = []
+                for x in numbers:
+                    if x in seen and x not in duplicates:
+                        duplicates.append(x)  # Сюда записываем дубликаты, если их уже видели
+                    seen.append(x)  # Сюда записываем то, что уже видели
+                if duplicates:
+                    print("Repeating elements and their number:")
+                    for item in duplicates:
+                        # Считаем, сколько раз item встречается в исходном списке numbers
+                        count = numbers.count(item)
+                        print(f"- Element {item:g} occurs {count} times.")
         else:  # Вывод, если ни одно значение в список не попало
             print("Error: List is empty!")
 
@@ -98,9 +137,4 @@ while is_continue:
 
 
 
-    # elif user_choice == '4':
-    #     is_continue = False
-    # else:
-    #     print("No such action!")
-    #
     # print("=" * 50)
