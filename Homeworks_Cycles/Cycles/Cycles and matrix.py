@@ -11,7 +11,9 @@ while is_continue:
           "8 - Vowels and consonants letters\n"
           "9 - Prime number N\n"
           "10 - Search for perfect numbers up to and including N\n"
-          "11 - Finding the number of steps to N = 1")
+          "11 - Armstrong number\n"
+          "12 - Finding the number of steps to N = 1\n"
+          "0 - Exit")
     print("➤➤➤")
     user_choice = input("Enter your choice HERE ➤ : ")
 
@@ -348,5 +350,40 @@ while is_continue:
         except ValueError:
             print("Error: Invalid input! Please enter a valid integer.")
 
+    # elif user_choice == '11':
+    #     try:
+    #         user_input = input("Enter a number to check: ")
+    #         # Проверяем, что введено положительное целое число
+    #         if user_input.isdigit() and int(user_input) >= 0:
+    #             num = int(user_input)
+    #
+    #             power = len(user_input)  # Считаем количество цифр шоб понять какая степень
 
-    # print("=" * 50)
+
+
+
+
+
+    elif user_choice == '12':
+        try:
+            num = int(input("Enter the number N than 0: "))
+            if num > 0:  # Число не может быть 0
+                steps = 0
+                while num != 1:  # Пока не стало 1 перебираем
+                    if num % 2 == 0:  # Если четное делим на два
+                        num //= 2
+                    else:
+                        num = num * 3 + 1  # Если нечетное, то умножаем на 3 и плюс 1
+                    steps += 1
+                print(f"To one in: {steps} steps!")
+            else:
+                print("Error: Numbers must be greater than 0!")
+        except ValueError:
+            print("Error: Invalid input! Please enter a valid integer.")
+
+    elif user_choice == '0':
+        print("Exit")
+        is_continue = False
+
+    print("-" * 50)
+
