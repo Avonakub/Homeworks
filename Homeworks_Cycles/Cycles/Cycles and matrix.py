@@ -316,8 +316,37 @@ while is_continue:
         except ValueError:
             print("Error: Invalid input! Please enter a valid integer.")
 
+    elif user_choice == '10':
+        try:
+            # Запросили предел поиска до какого числа проверять
+            num = int(input("Enter the upper limit N: "))
+            if num > 0:  # Если число больше нуля выводим польз. предел поиска
+                print(f"Perfect numbers up to {num}:")
 
+                current_num = 1  # Начинаем проверять каждое число по очереди с 1
+                perfect_numbers = [] # Создаем пустой список для совершенных чисел, чтоб вывести красиво
+                while current_num < num:  # Перебираем все числа по порядку
+                    summ_divisors = 0  # Обнуляем счетчик для каждого нового числа, чтобы сумма не приклеилась к след.
+                    i = 1  # Проверяем все делители
+                    while i < current_num:  # Ищем делители меньше самого числа
+                        if current_num % i == 0:
+                            summ_divisors += i  # Плюсуем сам делитель, если остаток ноль
+                        i += 1  # Переходим к следующему числу
 
+                    # Когда перебрали все делители, сравниваем их сумму с самим числом, если все ок, добавляем в список
+                    if summ_divisors == current_num:
+                        perfect_numbers.append(str(current_num))
+
+                    current_num += 1  # Переходим к следующему числу
+
+                if perfect_numbers:
+                    print(f"Number {', '.join(map(str, perfect_numbers))} is PERFECT!")
+                else:
+                    print("No perfect numbers found in this range.")
+            else:
+                print("Error: Numbers must be greater than 0!")
+        except ValueError:
+            print("Error: Invalid input! Please enter a valid integer.")
 
 
     # print("=" * 50)
