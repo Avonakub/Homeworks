@@ -16,9 +16,32 @@ def show_beautiful_matrix(matrix):
         print(row)
 
 
+def find_min_max(matrix):
+    minimum = matrix[0][0]
+    maximum = matrix[0][0]
+
+    min_idx = [0, 0]
+    max_idx = [0, 0]
+    for i in range(len(matrix)):  # Перебираем строки
+        for j in range(len(matrix[i])):  # Перебираем столбцы
+
+            current_val = matrix[i][j]  # Начальная точка индексов
+
+            if current_val < minimum:
+                minimum = current_val
+                min_idx = [i, j]  # Запоминаем новые координаты
+
+            if current_val > maximum:
+                maximum = current_val
+                max_idx = [i, j]  # Запоминаем новые координаты
+
+    print(f"Min value: {minimum} at index [{min_idx[0]}][{min_idx[1]}]")
+    print(f"Max value: {maximum} at index [{max_idx[0]}][{max_idx[1]}]")
+
+
 def show_menu():
     print("1 - Matrix M x N\n"
-          "2 - Min % max in matrix M x N\n"
+          "2 - Min & max in matrix M x N\n"
           "3 - Sum of elements in matrix M x N\n"
           "4 - Multiplies of elements in matrix M x N\n"
           "5 - Sum of elements every rows in matrix M x N\n"
@@ -50,3 +73,15 @@ while is_continue:
         my_matrix = generate_random_matrix(rows, cols)
         print("Generated Matrix: ")
         show_beautiful_matrix(matrix=my_matrix)
+
+    elif user_choice == "2":
+        rows = get_positive_integer("Enter rows (M): ")
+        cols = get_positive_integer("Enter columns (N): ")
+        my_matrix = generate_random_matrix(rows, cols)
+        print("Generated Matrix: ")
+        show_beautiful_matrix(matrix=my_matrix)
+
+        find_min_max(my_matrix)
+
+
+
