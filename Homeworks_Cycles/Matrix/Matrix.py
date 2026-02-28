@@ -74,13 +74,37 @@ def input_K_columns(text, cols):
             print("Error: Please enter only numbers!")
 
 
+def input_L_rows(text, rows):
+    while True:
+        user_input = input(text)
+        try:
+            l = int(user_input)
+            if 0 <= l < rows:
+                return l
+            else:
+                print(f"Error: l is out of range! Enter a number from 0 to {rows - 1}.")
+        except ValueError:
+            print("Error: Please enter only numbers!")
+
+
+def add_l_row_to_all(matrix, l):
+    rows = len(matrix)
+    cols = len(matrix[0])
+
+    result = []  # Копия матрицы
+    for row in matrix:
+        result.append(list(row))
+
+    for i in range(rows):
+        for j in range(cols):
+            result[i][j] += matrix[l][j]
+
+    return result
+
+
 def multiply_columns_by_K(matrix, k):
     rows = len(matrix)  # Получаем количество строк матрицы
     cols = len(matrix[0])  # Количество столбцов
-
-    if k < 0 or k >= cols:
-        print("Error: k is out of range!")
-        return None
 
     result = []  # Копия матрицы
     for row in matrix:
@@ -162,4 +186,17 @@ while is_continue:
         result_matrix = multiply_columns_by_K(my_matrix, k)
         if result_matrix:
             print("Result Matrix after multiplication:")
+            show_beautiful_matrix(result_matrix)
+
+    elif user_choice == "5":
+        rows = get_positive_integer("Enter rows (M): ")
+        cols = get_positive_integer("Enter columns (N): ")
+        my_matrix = generate_random_matrix(rows, cols)
+        print("Generated Matrix: ")
+        show_beautiful_matrix(matrix=my_matrix)
+        l = input_L_rows(f"Enter index of row L (0 to {rows - 1}): ", rows)
+
+        result_matrix = add_l_row_to_all(my_matrix, l)
+        if result_matrix:
+            print("Result Matrix after adding row:")
             show_beautiful_matrix(result_matrix)
