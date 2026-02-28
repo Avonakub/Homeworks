@@ -11,6 +11,41 @@ def generate_random_matrix(rows_count, cols_count):
     return matrix
 
 
+def binary_matrix(rows_count, cols_count):
+    matrix = []
+    for row in range(0, rows_count):
+        matrix.append([])
+        for cool in range(0, cols_count):
+           matrix[row].append(randint(0, 1))
+
+    return matrix
+
+
+def show_beautiful_binary_matrix(matrix):
+    for row in matrix:
+        print(row)
+
+
+def add_parity_column(matrix):
+
+    result = []
+    for row in matrix:
+        result.append(list(row))
+
+    for row in result:
+        ones_count = 0
+        for element in row:
+            if element == 1:
+                ones_count = ones_count + 1
+
+        if ones_count % 2 != 0:
+            row.append(1)
+        else:
+            row.append(0)
+
+    return result
+
+
 def show_beautiful_matrix(matrix):
     for row in matrix:
         print(row)
@@ -269,7 +304,18 @@ while is_continue:
     elif user_choice == "8":
         rows = get_positive_integer("Enter rows (M): ")
         cols = get_positive_integer("Enter columns (N): ")
-        my_matrix = generate_random_matrix(rows, cols)
-        print("Generated Matrix: ")
-        show_beautiful_matrix(matrix=my_matrix)
+        my_matrix = binary_matrix(rows, cols)
+        print("Generated binary Matrix: ")
+        show_beautiful_binary_matrix(matrix=my_matrix)
+
+        result_matrix = add_parity_column(my_matrix)
+        print("Matrix with parity column:")
+        show_beautiful_binary_matrix(matrix=result_matrix)
+
+    elif user_choice == "0":
+        is_continue = False
+        print("Goodbye!")
+
+
+
 
