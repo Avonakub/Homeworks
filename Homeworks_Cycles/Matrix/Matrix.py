@@ -145,6 +145,22 @@ def multiply_columns_by_K(matrix, k):
     return result
 
 
+def count_main_diagonal_sum(matrix):
+    result = 0
+    for i in range(len(matrix)):
+        result += matrix[i][i]
+    return result
+
+
+def get_secondary_diag_sum(matrix):
+    result = 0
+    for i in range(len(matrix)):
+        for j in range(len(matrix[i])):
+            if (i + j) == (len(matrix[i]) - 1):
+                result += matrix[j][i]
+    return result
+
+
 def show_menu():
     print("1 - Matrix M x N\n"
           "2 - Min & max in matrix M x N\n"
@@ -237,3 +253,15 @@ while is_continue:
         show_beautiful_matrix(matrix=my_matrix)
         h = input_H("Enter a number H to check if it is in the columns: ")
         coincidence_with_H(my_matrix, h)
+
+    elif user_choice == "7":
+        rows = get_positive_integer("Enter rows (M): ")
+        cols = get_positive_integer("Enter columns (N): ")
+        my_matrix = generate_random_matrix(rows, cols)
+        print("Generated Matrix: ")
+        show_beautiful_matrix(matrix=my_matrix)
+
+        count_main_diagonal_sum = count_main_diagonal_sum(matrix=my_matrix)
+        print(f"Sum of the elements of the main diagonal: {count_main_diagonal_sum}")
+        secondary_diag_sum = get_secondary_diag_sum(matrix=my_matrix)
+        print(f"Sum of the elements of the secondary diagonal: {secondary_diag_sum}")
