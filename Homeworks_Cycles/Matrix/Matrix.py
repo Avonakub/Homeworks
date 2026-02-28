@@ -48,12 +48,12 @@ def summ_elements(matrix):
             total += item
     print(f"Sum of elements of matrix: {total}")
 
-    num_rows = len(matrix)
-    num_cols = len(matrix[0])
+    rows = len(matrix)
+    cols = len(matrix[0])
 
-    for j in range(num_cols):
+    for j in range(cols):
         col_sum = 0
-        for i in range(num_rows):
+        for i in range(rows):
             col_sum += matrix[i][j]
 
         percentage = (col_sum / total) * 100
@@ -86,6 +86,34 @@ def input_L_rows(text, rows):
         except ValueError:
             print("Error: Please enter only numbers!")
 
+
+def input_H(text):
+    while True:
+        user_input = input(text)
+        try:
+            h = int(user_input)
+            if 0 <= h <= 100:
+                return h
+            else:
+                print(f"Error: Enter a number from 0 to 100.")
+        except ValueError:
+            print("Error: Please enter only numbers!")
+
+
+def coincidence_with_H(matrix, h):
+    rows = len(matrix)
+    cols = len(matrix[0])
+
+    for j in range(cols):
+        found = False  # Пока не нашли
+        for i in range(rows):
+            if h == matrix[i][j]:
+                found = True  # Если нашли
+                break
+        if found:
+            print(f"Column {j} HAS the number {h}.")
+        else:
+            print(f"Column {j} DOES NOT match the number {h}.")
 
 def add_l_row_to_all(matrix, l):
     rows = len(matrix)
@@ -200,3 +228,12 @@ while is_continue:
         if result_matrix:
             print("Result Matrix after adding row:")
             show_beautiful_matrix(result_matrix)
+
+    elif user_choice == "6":
+        rows = get_positive_integer("Enter rows (M): ")
+        cols = get_positive_integer("Enter columns (N): ")
+        my_matrix = generate_random_matrix(rows, cols)
+        print("Generated Matrix: ")
+        show_beautiful_matrix(matrix=my_matrix)
+        h = input_H("Enter a number H to check if it is in the columns: ")
+        coincidence_with_H(my_matrix, h)
