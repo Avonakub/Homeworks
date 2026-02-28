@@ -261,7 +261,15 @@ while is_continue:
         print("Generated Matrix: ")
         show_beautiful_matrix(matrix=my_matrix)
 
-        count_main_diagonal_sum = count_main_diagonal_sum(matrix=my_matrix)
-        print(f"Sum of the elements of the main diagonal: {count_main_diagonal_sum}")
-        secondary_diag_sum = get_secondary_diag_sum(matrix=my_matrix)
-        print(f"Sum of the elements of the secondary diagonal: {secondary_diag_sum}")
+        main_diagonal_total = count_main_diagonal_sum(matrix=my_matrix)
+        print(f"Sum of the elements of the main diagonal: {main_diagonal_total}")
+        secondary_diag_total = get_secondary_diag_sum(matrix=my_matrix)
+        print(f"Sum of the elements of the secondary diagonal: {secondary_diag_total}")
+
+    elif user_choice == "8":
+        rows = get_positive_integer("Enter rows (M): ")
+        cols = get_positive_integer("Enter columns (N): ")
+        my_matrix = generate_random_matrix(rows, cols)
+        print("Generated Matrix: ")
+        show_beautiful_matrix(matrix=my_matrix)
+
