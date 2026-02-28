@@ -61,13 +61,50 @@ def summ_elements(matrix):
               f"{percentage:.2f} %")
 
 
+def input_K_columns(text, cols):
+    while True:
+        user_input = input(text)
+        try:
+            k = int(user_input)  # Пытаемся превратить в число
+            if 0 <= k < cols:
+                return k
+            else:
+                print(f"Error: k is out of range! Enter a number from 0 to {cols - 1}.")
+        except ValueError:
+            print("Error: Please enter only numbers!")
+
+
+def multiply_columns_by_K(matrix, k):
+    rows = len(matrix)  # Получаем количество строк матрицы
+    cols = len(matrix[0])  # Количество столбцов
+
+    if k < 0 or k >= cols:
+        print("Error: k is out of range!")
+        return None
+
+    result = []  # Копия матрицы
+    for row in matrix:
+        result.append(list(row))
+
+    for i in range(rows):
+        k_value = matrix[i][k]
+        for j in range(cols):
+            result[i][j] *= k_value
+    return result
+
+
 def show_menu():
     print("1 - Matrix M x N\n"
           "2 - Min & max in matrix M x N\n"
-          "3 - Sum of elements in matrix M x N\n"
-          "4 - Multiplies of elements in matrix M x N\n"
-          "5 - Sum of elements every rows in matrix M x N\n"
-           "0 - Exit")
+          "3 - The sum of the elements of the matrix M x N and the proportion of the "
+          "sum of the columns from the total sum of the matrix elements.\n"
+          "4 - Multiplication of the elements of each column of the matrix M x N"
+          "by the corresponding elements of the K-th column\n"
+          "5 - Sum of the elements of each row of the matrix with the elements of the L-th row in matrix M x N\n"
+          "6 - Finding matches in a matrix M x N\n"
+          "7 - Sum of elements on the main and secondary diagonals\n"
+          "8 - Transformation to even elements\n"
+          "0 - Exit")
     print("➤➤➤")
 
 
@@ -114,4 +151,15 @@ while is_continue:
 
         summ_elements(my_matrix)
 
+    elif user_choice == "4":
+        rows = get_positive_integer("Enter rows (M): ")
+        cols = get_positive_integer("Enter columns (N): ")
+        my_matrix = generate_random_matrix(rows, cols)
+        print("Generated Matrix: ")
+        show_beautiful_matrix(matrix=my_matrix)
+        k = input_K_columns(f"Enter index of column K (0 to {cols-1}): ",cols)
 
+        result_matrix = multiply_columns_by_K(my_matrix, k)
+        if result_matrix:
+            print("Result Matrix after multiplication:")
+            show_beautiful_matrix(result_matrix)
