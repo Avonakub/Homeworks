@@ -22,6 +22,20 @@ def get_validated_integer(text, min_value=None):
             print("Error: Please enter only numbers!")
 
 
+def binary_search_recursive(arr, target, left, right):
+    if left > right:
+        return "- 1 or element not found"
+
+    mid = (left + right) // 2
+
+    if arr[mid] == target:
+        return mid
+    elif arr[mid] > target:
+        return binary_search_recursive(arr, target, left, mid - 1)
+    else:
+        return binary_search_recursive(arr, target, mid + 1, right)
+
+
 def prime_number(number):
     div = 2
     while number % div != 0:
@@ -77,6 +91,30 @@ is_continue = True
 while is_continue:
     show_menu()  # Вызвали функцию
     user_choice = input("Enter your choice HERE ➤ : ")
+
+    if user_choice == "1":
+        number_list = []
+
+        user_input = "start"
+        print("Enter the numbers one at a time. To finish, just press Enter ➤ ")
+        while user_input != "":
+            user_input = input("Enter number: ")
+            if user_input != "":
+                try:
+                    if (user_input.startswith('0') and len(user_input) > 1 and user_input[1] != '.') or \
+                            (user_input.startswith('-0') and len(user_input) > 2 and user_input[2] != '.'):
+                        print("Error: Number cannot start with zero!")
+                    else:
+                        number_list.append(float(user_input))
+                except ValueError:
+                    print("Error: Please enter a valid number!")
+
+        number_list.sort()
+        print(f"Sorted numbers: {number_list}")
+
+        target = get_validated_integer("What number to find? ")
+        pos = binary_search_recursive(number_list, target, 0, len(number_list) - 1)
+        print(f"Found number index: {pos}")
 
     if user_choice == "3":
         number = get_validated_integer("Enter a number greater than 1 to check if it's prime: ", 2)
