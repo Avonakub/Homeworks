@@ -52,6 +52,27 @@ def caesar_cipher(text, step):
     return result
 
 
+def vigenre_cipher(text, key_chipher):
+    result = ""
+    key_index = 0
+
+    for letters in text:
+        if "a" <= letters.lower() <= "z":
+           start = ord("A") if letters.isupper() else ord("a")
+           # Берем тек. букву и считаем сдвиг (код буквы минус код начала)
+           current_key_letter = key_chipher[key_index % len(key_chipher)]
+           step_start = ord("A") if current_key_letter.isupper() else ord("a")
+           step = ord(current_key_letter) - step_start
+
+           new_pos = (ord(letters) - start + step) % 26
+           result += chr(start + new_pos)
+
+           key_index += 1  # Перешли к след. букве ключа
+        else:
+             result += letters  # Пробелы и знаки как есть
+    return result
+
+
 is_continue = True
 while is_continue:
     show_menu()  # Вызвали функцию
@@ -85,6 +106,23 @@ while is_continue:
               "- for decryption - a negative step")
         user_step = get_validated_integer("Enter the shift step: ")
         encrypted_text = caesar_cipher(text_to_encrypt, user_step)
+        print(f"New string is: {encrypted_text}")
+
+    elif user_choice == "6":
+        while True:
+            text_to_encrypt = input("Enter an English string for encryption or decryption: ")
+
+            has_russian = False
+            for letters in text_to_encrypt:
+                if 'а' <= letters.lower() <= 'я' or letters.lower() == 'ё':
+                    has_russian = True
+                    break
+            if has_russian:
+                print("Error: Russian letters are not supported!")
+            else:
+                break
+        input_key = input("Enter a keyword (letters only): ")
+        encrypted_text = vigenre_cipher(text_to_encrypt, input_key)
         print(f"New string is: {encrypted_text}")
 
     elif user_choice == "0":
