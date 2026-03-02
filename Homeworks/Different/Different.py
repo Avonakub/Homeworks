@@ -5,6 +5,7 @@ def show_menu():
           "4 - Greatest common divisor\n"
           "5 - Caesar cipher\n"
           "6 - Vigenère cipher\n"
+          "7 - Run-Length Encoding\n"
           "0 - Exit")
     print("➤➤➤")
 
@@ -109,6 +110,22 @@ def vigenre_cipher(text, key_chipher):
     return result
 
 
+def compress_string():
+
+        if not str_s: return ""
+        result = []
+        count = 1
+
+        for i in range(len(str_s) -1):
+            if str_s[i] == str_s[i + 1]:
+                count += 1
+            else:
+                result.append(str_s[i] + str(count))
+                count = 1
+        result.append(str_s[-1] + str(count))
+        return "".join(result)
+
+
 is_continue = True
 while is_continue:
     show_menu()  # Вызвали функцию
@@ -189,6 +206,16 @@ while is_continue:
         input_key = input("Enter a keyword (letters only): ")
         encrypted_text = vigenre_cipher(text_to_encrypt, input_key)
         print(f"New string is: {encrypted_text}")
+
+    elif user_choice == "7":
+        while True:
+            str_s = input("Enter a string to compress: ")
+            if not str_s:
+                print("Error: There is nothing to compress!")
+                continue
+            string_s = compress_string()
+            print(f"Compressed string is: {string_s}")
+            break
 
     elif user_choice == "0":
         print("Goodbye!")
