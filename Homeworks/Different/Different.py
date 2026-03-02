@@ -6,6 +6,8 @@ def show_menu():
           "5 - Caesar cipher\n"
           "6 - Vigenère cipher\n"
           "7 - Run-Length Encoding\n"
+          "8 - Spam\n"
+          "9 - Genetic algorithm\n"
           "0 - Exit")
     print("➤➤➤")
 
@@ -149,6 +151,29 @@ def check_for_spam(text):
     return False
 
 
+import random  # Рандомное число
+import string  # Набор готовых строк "ABCD.."
+
+
+def evolve_string(target):
+    chars = string.ascii_uppercase
+
+    current = ''.join(random.choice(chars) for _ in range(len(target)))
+    generation = 0
+
+    while current != target:
+        generation += 1
+        new_string_list = []  # Временный список для сборки новой строки
+        for i in range(len(target)):
+            if current[i] == target[i]:  # Если символ совпал, сохраняем
+                new_string_list.append(current[i])
+            else:
+                new_string_list.append(random.choice(chars))
+
+        current = ''.join(new_string_list)  # Превращаем обратно в строку
+    return generation
+
+
 is_continue = True
 while is_continue:
     show_menu()  # Вызвали функцию
@@ -248,6 +273,18 @@ while is_continue:
             print("Warning: This message is SPAM!")
         else:
             print("OK: This message is safe.")
+
+    elif user_choice == "9":
+        while True:
+            user_input = input("Enter the word in English letters : ")
+            word = "".join(c for c in user_input if c.isalpha() and c.isascii()).upper()
+            if not word:
+                print("Error: Please enter at least one English letter!")
+                continue
+            else:
+                result = evolve_string(word)
+                print(f"String {word} was obtained over generations: {result}")
+                break
 
 
     elif user_choice == "0":
