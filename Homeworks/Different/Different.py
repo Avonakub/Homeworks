@@ -126,6 +126,29 @@ def compress_string():
         return "".join(result)
 
 
+def check_for_spam(text):
+    cleaned_text = ""  # Корзина с чистыми буквами
+    # Берем по символу, проверяем буква это или знак.
+    # Если буква кидаем в корзину, и кидаем пробел
+    for char in text:
+        if char.isalnum() or char.isspace():
+            cleaned_text += char
+
+    words = cleaned_text.split()  # Разбили текст на отд. слова в корзине по пробелу
+    count = 0
+    spam_list = ['бесплатно', 'акция', 'бонус', 'выигрыш', 'халява', 'казино', 'легкие деньги', 'последний шанс', 'гарантия']
+
+    for word in words:
+        if len(word) >= 3 and word.isupper():
+            return True
+        if word.lower() in spam_list:
+            count += 1
+    if count > 3:
+        return True
+    print(f"In message is {count} spam-words")
+    return False
+
+
 is_continue = True
 while is_continue:
     show_menu()  # Вызвали функцию
@@ -216,6 +239,16 @@ while is_continue:
             string_s = compress_string()
             print(f"Compressed string is: {string_s}")
             break
+
+    elif user_choice == "8":
+        message = input("Enter a message: ")
+        is_spam = check_for_spam(message)
+
+        if is_spam:
+            print("Warning: This message is SPAM!")
+        else:
+            print("OK: This message is safe.")
+
 
     elif user_choice == "0":
         print("Goodbye!")
