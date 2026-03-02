@@ -8,6 +8,7 @@ def show_menu():
           "7 - Run-Length Encoding\n"
           "8 - Spam\n"
           "9 - Genetic algorithm\n"
+          "10 - Translate\n"
           "0 - Exit")
     print("➤➤➤")
 
@@ -174,6 +175,29 @@ def evolve_string(target):
     return generation
 
 
+def transliterate(text):
+    translit_map = {
+        'а': 'a', 'б': 'b', 'в': 'v', 'г': 'g', 'д': 'd', 'е': 'e', 'ё': 'yo',
+        'ж': 'zh', 'з': 'z', 'и': 'i', 'й': 'y', 'к': 'k', 'л': 'l', 'м': 'm',
+        'н': 'n', 'о': 'o', 'п': 'p', 'р': 'r', 'с': 's', 'т': 't', 'у': 'u',
+        'ф': 'f', 'х': 'h', 'ц': 'ts', 'ч': 'ch', 'ш': 'sh', 'щ': 'shch',
+        'ъ': '', 'ы': 'y', 'ь': '', 'э': 'e', 'ю': 'yu', 'я': 'ya'
+    }
+    transliterated = ""
+    for char in text:
+        is_upper = char.isupper()
+        lower_char = char.lower()
+        if lower_char in translit_map:
+            new_char = translit_map[lower_char]
+            if is_upper:  # Если ориг. большой, то и замена большая
+                transliterated += new_char.upper()
+            else:
+                transliterated += new_char
+        else:
+            transliterated += char
+    return transliterated
+
+
 is_continue = True
 while is_continue:
     show_menu()  # Вызвали функцию
@@ -284,6 +308,21 @@ while is_continue:
             else:
                 result = evolve_string(word)
                 print(f"String {word} was obtained over generations: {result}")
+                break
+
+    elif user_choice == "10":
+        while True:
+            user_input = input("Enter the word in Russian letters: ")
+            word = "".join(c for c in user_input if c.isalpha() or c.isspace())
+            if not word:
+                print("Error: Enter text in Russian letters!")
+                continue
+            if any(c.isascii() and c.isalpha() for c in word):
+                print("Error: Please use ONLY Russian letters!")
+                continue
+            else:
+                translate_word = transliterate(word)
+                print(f"Transliterated word is: {translate_word}")
                 break
 
 
