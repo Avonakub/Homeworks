@@ -9,6 +9,7 @@ def show_menu():
           "8 - Spam\n"
           "9 - Genetic algorithm\n"
           "10 - Translate\n"
+          "11 - Peak values\n"
           "0 - Exit")
     print("➤➤➤")
 
@@ -197,6 +198,17 @@ def transliterate(text):
             transliterated += char
     return transliterated
 
+def peak_values(data):
+
+    peaks = []  # Список для пиковых значений
+    for i in range (1, len(data) - 1):  # Края не учитываются
+        current = data[i]
+        left = data[i - 1]
+        right = data[i + 1]
+        if left < current and current > right:
+            peaks.append(current)
+    return peaks
+
 
 is_continue = True
 while is_continue:
@@ -223,7 +235,7 @@ while is_continue:
         number_list.sort()
         print(f"Sorted numbers: {number_list}")
 
-        target = get_validated_integer("What number to find? ")
+        target = get_validated_integer("What numbers to find? ")
         pos = binary_search_recursive(number_list, target, 0, len(number_list) - 1)
         print(f"Found number index: {pos}")
 
@@ -325,6 +337,28 @@ while is_continue:
                 print(f"Transliterated word is: {translate_word}")
                 break
 
+    elif user_choice == "11":
+        number_val = []
+        while not number_val:
+            user_input = "start"
+            print("Enter the numbers one at a time. To finish, just press Enter ➤ ")
+            while user_input != "":
+                user_input = input("Enter number: ")
+                if user_input != "":
+                    try:
+                        if (user_input.startswith('0') and len(user_input) > 1 and user_input[1] != '.') or \
+                                (user_input.startswith('-0') and len(user_input) > 2 and user_input[2] != '.'):
+                            print("Error: Number cannot start with zero!")
+                        else:
+                            number_val.append(float(user_input))
+                    except ValueError:
+                        print("Error: Please enter a valid number!")
+            if not number_val:
+                print("Error: Number list cannot be empty!")
+
+        print(f"Your number list: {number_val}")
+        pik_values = peak_values(number_val)
+        print(f"Peaks values in your number list: {pik_values}")
 
     elif user_choice == "0":
         print("Goodbye!")
