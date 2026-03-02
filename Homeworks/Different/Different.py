@@ -36,6 +36,28 @@ def binary_search_recursive(arr, target, left, right):
         return binary_search_recursive(arr, target, mid + 1, right)
 
 
+def get_validated_binary(text):
+    while True:
+        user_input = input(text)
+
+        if not user_input:
+            print("Error: Input cannot be empty!")
+            continue
+
+        if all(char in "01" for char in user_input):
+            return user_input
+
+        print("Error: Please enter only 0 and 1!")
+
+
+def from_binary_to_decimal(binary_number):
+    binary_str = str(binary_number)
+    decimal_number = 0
+    for digit in binary_str:
+        decimal_number = decimal_number * 2 + int(digit)
+    return decimal_number
+
+
 def prime_number(number):
     div = 2
     while number % div != 0:
@@ -116,7 +138,12 @@ while is_continue:
         pos = binary_search_recursive(number_list, target, 0, len(number_list) - 1)
         print(f"Found number index: {pos}")
 
-    if user_choice == "3":
+    elif user_choice == "2":
+        binary_number = get_validated_binary("Enter the binary number: ")
+        decim_num = from_binary_to_decimal(binary_number)
+        print(f"Number {binary_number} to decimal {decim_num}")
+
+    elif user_choice == "3":
         number = get_validated_integer("Enter a number greater than 1 to check if it's prime: ", 2)
         prime_number(number)
 
