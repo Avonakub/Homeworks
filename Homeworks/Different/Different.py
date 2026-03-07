@@ -320,7 +320,7 @@ while is_continue:
             encrypted_text = vigenre_cipher(text, input_key)
             print(f"New string is: {encrypted_text}")
         elif mode == "2":
-            decrypted_text = vigenre_cipher(text, input_key)
+            decrypted_text = decrypt_vigenre_cipher(text, input_key)
             print(f"New string is: {decrypted_text}")
 
     elif user_choice == "7":
