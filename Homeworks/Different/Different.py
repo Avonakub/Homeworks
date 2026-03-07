@@ -114,6 +114,26 @@ def vigenre_cipher(text, key_chipher):
     return result
 
 
+def decrypt_vigenre_cipher(text, key_chipher):
+    result = ""
+    key_index = 0
+
+    for letters in text:
+        if "a" <= letters.lower() <= "z":
+           start = ord("A") if letters.isupper() else ord("a")
+           # Берем тек. букву и считаем сдвиг (код буквы минус код начала)
+           current_key_letter = key_chipher[key_index % len(key_chipher)]
+           step_start = ord("A") if current_key_letter.isupper() else ord("a")
+           step = ord(current_key_letter) - step_start
+
+           new_pos = (ord(letters) - start - step) % 26
+           result += chr(start + new_pos)
+
+           key_index += 1  # Перешли к след. букве ключа
+        else:
+             result += letters  # Пробелы и знаки как есть
+    return result
+
 def compress_string():
 
         if not str_s: return ""
@@ -275,11 +295,18 @@ while is_continue:
         print(f"New string is: {encrypted_text}")
 
     elif user_choice == "6":
+
         while True:
-            text_to_encrypt = input("Enter an English string for encryption or decryption: ")
+            mode = input("Choose mode (1 - Encrypt, 2 - Decrypt): ")
+            if mode in ["1", "2"]:
+                break
+            print("Invalid mode selected. Please enter 1 or 2.")
+
+        while True:
+            text = input("Enter an English string: ")
 
             has_russian = False
-            for letters in text_to_encrypt:
+            for letters in text:
                 if 'а' <= letters.lower() <= 'я' or letters.lower() == 'ё':
                     has_russian = True
                     break
@@ -287,9 +314,14 @@ while is_continue:
                 print("Error: Russian letters are not supported!")
             else:
                 break
+
         input_key = input("Enter a keyword (letters only): ")
-        encrypted_text = vigenre_cipher(text_to_encrypt, input_key)
-        print(f"New string is: {encrypted_text}")
+        if mode == "1":
+            encrypted_text = vigenre_cipher(text, input_key)
+            print(f"New string is: {encrypted_text}")
+        elif mode == "2":
+            decrypted_text = vigenre_cipher(text, input_key)
+            print(f"New string is: {decrypted_text}")
 
     elif user_choice == "7":
         while True:
