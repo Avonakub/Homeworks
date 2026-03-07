@@ -12,16 +12,6 @@ def show_menu():
     print("➤➤➤")
 
 
-def number_to_string(number_list):
-    number_list = list(map(str, number_list))
-    return number_list
-
-
-def filter_list(number_list):
-    number_list = list(filter(lambda x: x > 0, number_list))
-    return number_list
-
-
 is_continue = True
 while is_continue:
     show_menu()  # Вызвали функцию
@@ -46,9 +36,8 @@ while is_continue:
             if not number_list:
                 print("Error: Number list cannot be empty!")
 
-        new_str_number_list = number_to_string(number_list)
         print(f"Your old list: {number_list}")
-        print(f"Your new list: {new_str_number_list}")
+        print(f"Your new list: {list(map(str, number_list))}")
 
     if user_choice == "2":
         number_list = []
@@ -69,9 +58,37 @@ while is_continue:
             if not number_list:
                 print("Error: Number list cannot be empty!")
 
-        new_number_list = filter_list(number_list)
         print(f"Your old list: {number_list}")
-        print(f"Your new list: {new_number_list}")
+        print(f"Your new list: {list(filter(lambda x: x > 0, number_list))}")
+
+    if user_choice == "3":
+
+        string_list = []
+
+        while not string_list:
+            user_input = "start"
+            print("Enter the words or phrases one at a time longer than 3 characters. To finish, just press Enter ➤ ")
+
+            while True:
+                user_input = input("Enter a string: ").strip()
+                if user_input == "":
+                    break
+                try:
+                    if len(user_input) < 3:
+                        print("Error: String cannot be shorter than 3 characters!")
+                    else:
+                        string_list.append(user_input)
+                except ValueError:
+                    print("Error: Please enter a valid string!")
+            if not string_list:
+                print("Error: list cannot be empty!")
+
+        print(f"Your old list: {string_list}")
+        print(f"Your new list: {list(filter(lambda x: x[::-1].lower() == x.lower(), string_list))}")
+
+
+
+
 
 
 
