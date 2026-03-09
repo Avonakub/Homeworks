@@ -10,7 +10,6 @@ def show_menu():
           "0 - Exit")
     print("➤➤➤")
 
-
 is_continue = True
 while is_continue:
     show_menu()  # Вызвали функцию
@@ -38,7 +37,7 @@ while is_continue:
         print(f"Your old list: {number_list}")
         print(f"Your new list: {list(map(str, number_list))}")
 
-    if user_choice == "2":
+    elif user_choice == "2":
         number_list = []
 
         while not number_list:
@@ -60,7 +59,7 @@ while is_continue:
         print(f"Your old list: {number_list}")
         print(f"Your new list: {list(filter(lambda x: x > 0, number_list))}")
 
-    if user_choice == "3":
+    elif user_choice == "3":
 
         string_list = []
 
@@ -86,7 +85,7 @@ while is_continue:
         print(f"Your new list: {list(filter(lambda x: x[::-1].lower() == x.lower(), string_list))}")
 
 
-    if user_choice == "5":
+    elif user_choice == "5":
         from functools import reduce
 
         rooms = []
@@ -138,7 +137,7 @@ while is_continue:
                 print(f"TOTAL AREA: {total_area} sq.m.")
                 print("-" * 40)
 
-    if user_choice == "6":
+    elif user_choice == "6":
 
         print("To determine your body mass index, enter your height between 0.6\n"
               "and 2.30 m and your weight between 30 and 320 kg.")
@@ -193,6 +192,73 @@ while is_continue:
                 print("Error: Please enter valid value!")
             finally:
                 print("-" * 40)
+
+    elif user_choice == "7":
+
+        print("A simple calculator for operations with TWO numbers")
+
+        while True:
+            try:
+                first_input = input("Enter first number: ").strip()
+
+                if first_input.startswith('0') and len(first_input) > 1 and first_input[1] != '.' \
+                        or first_input.startswith('-0') and len(first_input) > 2 and first_input[2] != '.':
+                    print("Error: Number cannot start with zero (except 0.86!)")
+                    continue
+                a = float(first_input)
+                break
+            except ValueError:
+                print("Error: Please enter valid number!")
+                continue
+            finally:
+                    print("-" * 40)
+
+        while True:
+            try:
+                operation = input('Enter operation ("*" , "/" , "+" or "-" ): ').strip()
+
+                if operation != '*' and operation != '/' and operation != '+' and operation != '-':
+                    print('Error: Operation must be one of: "*" , "/" , "+" or "-" ')
+                    continue
+                break
+            finally:
+                print("-" * 40)
+
+        while True:
+            try:
+                second_input = input("Enter second number: ").strip()
+
+                if second_input.startswith('0') and len(second_input) > 1 and second_input[1] != '.' \
+                    or second_input.startswith('-0') and len(second_input) > 2 and second_input[2] != '.':
+                    print("Error: Number cannot start with zero (except 0.86!)")
+                    continue
+                b = float(second_input)
+
+                if operation == "+":
+                    print(f"Result: {a} + {b} = {a + b}")
+                elif operation == "-":
+                    print(f"Result: {a} - {b} = {a - b}")
+                elif operation == "/":
+                    if b == 0:
+                        print("Error: division by zero")
+                        continue
+                    else:
+                        print(f"Result: {a} / {b} = {a / b}")
+                elif operation == "*":
+                    print(f"Result: {a} * {b} = {a * b}")
+                break
+            except ValueError:
+                print("Error: Please enter valid number!")
+                continue
+            finally:
+                print("-" * 40)
+
+
+
+
+
+
+
 
 
 
