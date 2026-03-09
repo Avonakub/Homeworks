@@ -138,10 +138,72 @@ while is_continue:
                 print(f"TOTAL AREA: {total_area} sq.m.")
                 print("-" * 40)
 
+    if user_choice == "6":
 
-    elif user_choice == "0":
-        print("Goodbye!")
-        is_continue = False
+        print("To determine your body mass index, enter your height between 0.6\n"
+              "and 2.30 m and your weight between 30 and 320 kg.")
+
+        while True:
+            try:
+                height_str = input("Enter your height in m: ").strip()
+                if height_str.startswith('0') and len(height_str) > 1 and height_str[1] != '.'\
+                        or height_str.startswith('-0') and len(height_str) > 2 and height_str[2] != '.':
+                    print("Error: Value cannot start with zero (except 0.86!)")
+                    continue
+                height = float(height_str)
+                if height < 0.6 or height > 2.3:
+                    print("Error: Height must be between 0.6 and 2.3 meters!")
+                    continue
+                break
+            except ValueError:
+                print("Error: Please enter valid value!")
+                continue
+            finally:
+                print("-" * 40)
+
+        while True:
+            try:
+                weight_str = input("Enter your weight in kg: ").strip()
+
+                weight = float(weight_str)
+                if weight < 30 or weight > 320:
+                    print("Error: Weight must be between 30 and 320 kilograms!")
+                    continue
+
+                bmi = weight / (height * height)
+
+                print(f"Your height: {height} m. Your weight: {weight} kg.")
+
+                if bmi < 16:
+                    print(f"Your body mass index is {bmi:.2f}. Critical value!!!")
+                elif 16 <= bmi < 18.5:
+                    print(f"Your body mass index: {bmi:.2f}. Short.")
+                elif 18.5 <= bmi <= 24.99:
+                    print(f"Your body mass index is {bmi:.2f}. Normal value.")
+                elif 25 <= bmi <= 29.99:
+                    print(f"Your body mass index is {bmi:.2f}. Overweight.")
+                elif 30 <= bmi <= 34.99:
+                    print(f"Your body mass index is {bmi:.2f}. Obesity grade 1.")
+                elif 35 <= bmi <= 39.99:
+                    print(f"Your body mass index is {bmi:.2f}. Obesity grade 2.")
+                elif bmi > 39.99:
+                    print(f"Your body mass index is {bmi:.2f}. Obesity grade 3.")
+                break
+            except ValueError:
+                print("Error: Please enter valid value!")
+            finally:
+                print("-" * 40)
+
+
+
+
+
+
+
+
+    # elif user_choice == "0":
+    #     print("Goodbye!")
+    #     is_continue = False
 
 
 
