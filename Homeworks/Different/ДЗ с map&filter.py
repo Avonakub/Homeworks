@@ -10,6 +10,41 @@ def show_menu():
           "0 - Exit")
     print("➤➤➤")
 
+
+from PIL import Image
+
+def pixelate_image(image_path, output_path, block_size):
+    image = Image.open(image_path).convert("RGB")
+    pixels = image.load()  # загрузит пиксели (это матрицы)
+    width, height = image.size  # взять от картинки размер длина и ширина
+
+    for y in range(0, height, block_size):
+        for x in range(0, width, block_size):
+            # Определяем границы текущего блока
+            block_x_end = min(x + block_size, width)
+            block_y_end = min(y + block_size, height)
+
+            # Собираем все пиксели в блоке
+            block_pixels = []
+            for block_y in range(y, block_y_end):
+                for block_x in range(x, block_x_end):
+                    block_pixels.append(pixels[block_x, block_y])
+
+            # Вычисляем средний цвет для блока
+            if block_pixels:
+                avg_color = tuple(
+                    int(sum(c[i] for c in block_pixels) / len(block_pixels))
+                    for i in range(3)
+                )
+
+                # Закрашиваем весь блок средним цветом
+                for block_y in range(y, block_y_end):
+                    for block_x in range(x, block_x_end):
+                        pixels[block_x, block_y] = avg_color
+
+    image.save(output_path)
+
+
 is_continue = True
 while is_continue:
     show_menu()  # Вызвали функцию
@@ -252,6 +287,51 @@ while is_continue:
                 continue
             finally:
                 print("-" * 40)
+
+    elif user_choice == "8":
+        import os
+
+        print("\nMake sure your image is in the same folder as this program!")
+        # Бесконечный ввод для имени файла, пока пользователь не введет существующий файл
+        while True:
+            image_path = input("Enter image filename (e.g., cat.jpg): ")
+            # Проверяем существует ли файл, если да выходим из цикла
+            if os.path.exists(image_path):
+                break
+            else:
+                # Если файл не найден - показываем ошибку и список доступных изображений
+                print(f"\nError: file '{image_path}' not found!")
+                print("\nAvailable images in current folder:")
+                found_images = False
+                # Проходим по всем файлам в папке и проверяем расширения
+                for file in os.listdir('.'):
+                    if file.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp', '.gif')):
+                        print(f"  - {file}")  # выводим название каждого найденного изображения
+                        found_images = True
+                if not found_images:
+                    print("  No images found!")  # Если изображений нет вообще, просим повторно ввести
+                print("\nPlease try again:")
+
+        # Бесконечный ввод для размера блока
+        while True:
+            try:
+                block = input("Enter pixel block size (integer number): ")
+                block_size = int(block)
+                if block_size < 1:
+                    print("Error: Block size must be greater than 0!")
+                    continue
+                break
+            # Если пользователь ввел не число (буквы, символы)
+            except ValueError:
+                print("Error: Please enter a valid number!")
+            finally:
+                print("-" * 40)
+
+        # Если дошли сюда - значит оба ввода корректные
+        output_path = "pixelated_" + image_path  # создаем имя для выходного файла
+        pixelate_image(image_path, output_path, block_size) # применяем фильтр
+        print(f"Done! Result saved as {output_path}")
+
 
 
 
