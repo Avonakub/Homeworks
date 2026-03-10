@@ -44,6 +44,42 @@ def pixelate_image(image_path, output_path, block_size):
 
     image.save(output_path)
 
+import time
+
+
+def repeat_and_measure(times):
+    def decorator(func):
+        def wrapper(*args, **kwargs):
+            total_time = 0
+
+            print("\n" + "=" * 40)
+            for i in range(times):
+                start = time.time()
+                func(*args, **kwargs)
+                end = time.time()
+                exec_time = end - start
+                total_time += exec_time
+
+                if i < times - 1:
+                    print("-" * 40)
+
+            avg_time = total_time / times
+            print(f"\nAverage time: {avg_time:.4f} seconds")
+            print("=" * 40)
+
+        return wrapper
+
+    return decorator
+
+
+def hello(name):
+    text = f"Hello, {name}"
+    border = "*" * (len(text) + 4)
+    print(border)
+    print(f"* {text} *")
+    print(border)
+    time.sleep(0.1)
+
 
 is_continue = True
 while is_continue:
@@ -117,60 +153,106 @@ while is_continue:
                 print("Error: list cannot be empty!")
 
         print(f"Your old list: {string_list}")
-        print(f"Your new list: {list(filter(lambda x: x[::-1].lower() == x.lower(), string_list))}")
+        print(f"Your new list: {list(filter(lambda x: x.replace(' ', '').lower() == x.replace(' ', '').lower()[::-1], 
+                                            string_list))}")
 
+    elif user_choice == "4":
+        print("\n=== DECORATOR'S DEMONSTRATION ===")
+
+        while True:
+                name = input("Enter your name: ")
+                if name == "":
+                    print("Error: Name cannot be empty!")
+                    continue
+                break
+        while True:
+            try:
+                times_str = input("How much repeat? ")
+                if times_str == "":
+                    print("Error: Number of repetitions cannot be empty!")
+                    continue
+                times = int(times_str)
+
+                if times <= 1:
+                    print("Error: Number of repetitions must be greater than 1!")
+                    continue
+                break
+            except ValueError:
+                print("Error: Please enter a valid number!")
+
+        decorated_hello = repeat_and_measure(times)(hello)
+        decorated_hello(name)
 
     elif user_choice == "5":
         from functools import reduce
 
         rooms = []
-        while not rooms:
-            print("Enter the room details. To finish, just press Enter ➤ ")
-
+        print("Enter the room details. To finish, just press Enter ➤")
+        while True:
+            name = input("Enter room name: ").strip()
+            if name == "":
+                if not rooms:  # Если не ввели ни одной комнаты
+                    print("Error: You must enter at least one room!")
+                    continue
+                else:
+                    break  # Выходим из цикла ввода комнат
             while True:
-                name = input("Enter room name: ").strip()
-                if name == "":
-                    break
                 try:
                     length_str = input("Enter a length room (m): ").strip()
-                    width_str = input("Enter a width room (m): ").strip()
 
-                    bad_length = (length_str.startswith('0') and len(length_str) > 1 and length_str[1] != '.') or \
-                                 (length_str.startswith('-0') and len(length_str) > 2 and length_str[2] != '.')
-
-                    bad_width = (width_str.startswith('0') and len(width_str) > 1 and width_str[1] != '.') or \
-                                (width_str.startswith('-0') and len(width_str) > 2 and width_str[2] != '.')
-
-                    if bad_length or bad_width:
+                    if length_str.startswith('0') and len(length_str) > 1 and length_str[1] != '.'\
+                        or length_str.startswith('-0') and len(length_str) > 2 and length_str[2] != '.':
                         print("Error: Number cannot start with zero (unless it's 0.something)!")
                         continue
 
                     length = float(length_str)
-                    width = float(width_str)
 
-                    if length <= 0 or width <= 0:
+                    if length <= 0:
                         print("Error: Dimensions must be positive!")
                         continue
-                    rooms.append({"name": name, "length": length, "width": width})
-                    print(f"Added room: {name}")
+                    break
+                except ValueError:
+                    print("Error: Please enter valid value!")
+                    continue
+                finally:
+                    print("-" * 40)
+
+            while True:
+                try:
+                    width_str = input("Enter a width room (m): ").strip()
+
+                    if width_str.startswith('0') and len(width_str) > 1 and width_str[1] != '.'\
+                        or width_str.startswith('-0') and len(width_str) > 2 and width_str[2] != '.':
+                        print("Error: Number cannot start with zero (unless it's 0.something)!")
+                        continue
+
+                    width = float(width_str)
+
+                    if width <= 0:
+                        print("Error: Dimensions must be positive!")
+                        continue
+                    break
                 except ValueError:
                     print("Error: Please enter a valid float number!")
-            if not rooms:
-                print("Error: list rooms cannot be empty!")
+                finally:
+                    print("-" * 40)
 
-            if rooms:
-                areas = list(map(lambda r: r["length"] * r["width"], rooms))
-                total_area = reduce(lambda x, y: x + y, areas)
+            rooms.append({"name": name, "length": length, "width": width})
+            print(f"Added room: {name}")
 
-                print("\n" + "-" * 40)
-                print("ROOMS IN APARTMENT")
-                print("-" * 40)
-                for i, room in enumerate(rooms, 1):
-                    area = room['length'] * room['width']
-                    print(f"{i}. {room['name']}: {room['length']} m x {room['width']} m = {area} sq.m.")
-                print("-" * 40)
-                print(f"TOTAL AREA: {total_area} sq.m.")
-                print("-" * 40)
+        if rooms:
+            areas = list(map(lambda r: r["length"] * r["width"], rooms))
+            total_area = reduce(lambda x, y: x + y, areas)
+
+            print("\n" + "-" * 40)
+            print("ROOMS IN APARTMENT")
+            print("-" * 40)
+            for i, room in enumerate(rooms, 1):
+                area = room['length'] * room['width']
+                print(f"{i}. {room['name']}: {room['length']} m x {room['width']} m = {area} sq.m.")
+            print("-" * 40)
+            print(f"TOTAL AREA: {total_area} sq.m.")
+            print("-" * 40)
 
     elif user_choice == "6":
 
@@ -332,24 +414,9 @@ while is_continue:
         pixelate_image(image_path, output_path, block_size) # применяем фильтр
         print(f"Done! Result saved as {output_path}")
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    # elif user_choice == "0":
-    #     print("Goodbye!")
-    #     is_continue = False
+    elif user_choice == "0":
+        print("Goodbye!")
+        is_continue = False
 
 
 
