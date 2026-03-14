@@ -4,7 +4,7 @@ import re
 def show_menu():
     print("1 - OS. Creating folders, rename files\n"
           "2 - Change name\n"
-          "3 - Prime number\n"
+          "3 - Reading text. The most frequently encountered word\n"
           "4 - Greatest common divisor\n"
           "5 - Caesar cipher\n"
           "6 - Vigenère cipher\n"
@@ -130,3 +130,76 @@ while is_continue:
             print(f"✅ Replacement completed! File {filename} has been updated.")
             print("New content:")
             print(target_content)
+
+# ==========================================================
+# TASK 3: Reading text. The most frequently encountered word
+# ==========================================================
+    if user_choice == "3":
+        filename = 'text.txt'
+        lines = []
+        while not lines:
+            print("Enter lines in which there are at least 3 words one at a time. To finish, just press Enter ➤ ")
+            while True:
+                user_input = input("Enter line: ").strip()
+                if user_input == "":
+                    if len(lines) == 0:
+                        print("❌ You must enter at least one line!")
+                        continue
+                    else:
+                        break
+                # находим все слова (последовательности букв) вместо сплита
+                words = re.findall(r'[а-яА-ЯёЁa-zA-Z]+', user_input)
+                if len(words) < 3:
+                    print(f"❌ Line must contain at least 3 words! You entered {len(words)} word(s).")
+                    continue
+                lines.append(user_input)
+                print(f"✅ Line accepted ({len(words)} words)")
+            test_text = '\n'.join(lines)
+            if not lines:
+                print("Error: Text list cannot be empty!")
+
+            with open(filename, 'w') as file:
+                file.write(test_text)  # записали файл с нужным текстом
+            print(f"✅ File {filename} created!")
+
+            with open(filename, 'r') as file:
+                results = []  # список результатов
+                for line in file:
+                    line = line.strip()
+                    # находим все слова
+                    words = re.findall(r'[а-яА-ЯёЁa-zA-Z]+', line.lower())
+
+                    if words:
+                        word_count = {}  # создаем словарь для слов
+                        for word in words:
+                            if word in word_count:
+                                word_count[word] = word_count[word] + 1
+                            else:
+                                word_count[word] = 1
+
+                        max_word = ""
+                        max_count = 0
+
+                        for word in word_count:  # слово должно встречаться больше 1 раза
+                            if word_count[word] > 1 and word_count[word] > max_count:
+                                max_count = word_count[word]
+                                max_word = word
+
+                        # проверяем, нашли ли слово с повторением
+                        if max_count > 1:
+                            results.append(f"{max_word}:{max_count}")
+                            print(f"'{max_word}' - {max_count} times")
+                        else:
+                            results.append("no repeats:0")
+                            print("No words repeated more than once")
+                    else:
+                        results.append("no words:0")
+                        print("No words")
+
+            # сохраняем в файл
+            with open('freq.txt', 'w') as file:
+                for r in results:
+                    file.write(r + '\n')
+
+            print("\n✅ The results are saved in 'freq.txt'")
+
