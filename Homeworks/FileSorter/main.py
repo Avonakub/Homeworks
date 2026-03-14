@@ -5,7 +5,7 @@ def show_menu():
     print("1 - OS. Creating folders, rename files\n"
           "2 - Change name\n"
           "3 - Reading text. The most frequently encountered word\n"
-          "4 - Greatest common divisor\n"
+          "4 - Replace with *****\n"
           "5 - Caesar cipher\n"
           "6 - Vigenère cipher\n"
           "7 - Run-Length Encoding\n"
@@ -106,13 +106,13 @@ while is_continue:
                 "сотрудники полиции, скорая и пожарные, которым она сообщила,\n"
                 "что бомба — это она."
             )
-            with open(filename, 'w') as file:
+            with open(filename, 'w', encoding='utf-8') as file:
                 file.write(test_text) # записали файл с нужным текстом
             print(f"✅ File {filename} created!")
 
         pattern = r"(?<=Подсудимая\s)[А-ЯЁ][а-яё]+(?:-[А-ЯЁ][а-яё]+)?(?:\s[А-ЯЁ][а-яё]+){2}"  # регулярка для ФИО
 
-        with open(filename, 'r') as file:
+        with open(filename, 'r', encoding='utf-8') as file:
             file_content = file.read()  # открываем и читаем созданный файл
 
         print(f"\nContent {filename}:")
@@ -124,7 +124,7 @@ while is_continue:
             print(f"\n⚠️ File {filename} already contains replacements!")  # если в файле есть изменения
         else:
             target_content = re.sub(pattern, 'N', file_content)  # заменяем ФИО на N
-            with open(filename, 'w') as file:
+            with open(filename, 'w', encoding='utf-8') as file:
                 file.write(target_content)  # записываем обратно
 
             print(f"✅ Replacement completed! File {filename} has been updated.")
@@ -158,11 +158,11 @@ while is_continue:
             if not lines:
                 print("Error: Text list cannot be empty!")
 
-            with open(filename, 'w') as file:
+            with open(filename, 'w', encoding='utf-8') as file:
                 file.write(test_text)  # записали файл с нужным текстом
             print(f"✅ File {filename} created!")
 
-            with open(filename, 'r') as file:
+            with open(filename, 'r', encoding='utf-8') as file:
                 results = []  # список результатов
                 for line in file:
                     line = line.strip()
@@ -197,9 +197,95 @@ while is_continue:
                         print("No words")
 
             # сохраняем в файл
-            with open('freq.txt', 'w') as file:
+            with open('freq.txt', 'w', encoding='utf-8') as file:
                 for r in results:
                     file.write(r + '\n')
 
             print("\n✅ The results are saved in 'freq.txt'")
+# ==========================================================
+# TASK 4: Replace with *******
+# ==========================================================
+    if user_choice == "4":
+
+        print("\nMake sure your file is in the same folder as this program!")
+        print(f"Current directory: {os.getcwd()}")
+
+        stop_words = None
+        while stop_words is None:
+            if os.path.exists('stop_words.txt'):
+                with open('stop_words.txt', 'r', encoding='utf-8') as file:
+                    raw_content = file.read().replace(',', ' ').split()
+                    temp_words = [word.strip() for word in raw_content if word.strip()]
+                if not temp_words:
+                    print("\n⚠️ The file 'stop_words.txt' is EMPTY!")
+                    print("Please add some forbidden words to it and save.")
+                    user_input = input("Press Enter to try again or type 'q' to exit: ").strip().lower()
+                    if user_input == 'q':
+                        break
+                    continue  # пробуем прочитать файл снова после паузы
+                stop_words = temp_words
+                print(f"✅ Stop-words loaded: {stop_words}")
+            else:
+                print("\n❌ File stop_words.txt not found!")
+                print("Please create a file stop_words.txt in the current folder and add stop"
+                      "words to it, separated by commas.")
+                user_input = input("Press Enter to try again or type 'q' to exit: ").strip().lower()
+
+                if user_input == 'q':
+                    print("Exiting to main menu...")
+                    break
+        if stop_words is None:
+            continue
+
+        while True:
+            filename = input("Enter the file name to be censored with extensions .txt (e.g., data.txt): ").strip()
+            if os.path.exists(filename):
+                print("✅ File found!")
+                with open(filename, 'r', encoding='utf-8') as file:
+                    file_content = file.read()  # открываем и читаем файл
+
+                    print(f"\nOriginal text in {filename}:")
+                    print("-" * 50)
+                    print(file_content)  # выводим содержимое файла
+                    print("-" * 50)
+                    # очистка стоп-слов от мусора и пустых строк, стрип очистит, ловер приведет к одному регистру
+                    stop_words_clean = [word.strip(' ,').lower() for word in stop_words if word.strip(' ,')]
+                    # регулярное выражение для всех стоп-слов и внутри слов
+                    pattern = '(' + '|'.join(map(re.escape, stop_words_clean)) + ')'
+
+
+                    # функция для замены на звездочки той же длины
+                    def replace_with_stars(match):
+                        return '*' * len(match.group())
+
+
+                    # применяем замену ко всему тексту
+                    censored_text = re.sub(pattern, replace_with_stars,
+                                           file_content, flags=re.IGNORECASE)
+                    # собираем текст обратно
+                    print(f"\nText after censorship:")
+                    print("-" * 50)
+                    print(censored_text)
+                    print("-" * 50)
+
+                    with open('censorship.txt', 'w', encoding='utf-8') as file:
+                        file.write(censored_text)
+                    print("✅ The result is saved in 'censorship.txt'")
+                break
+            else:
+                print("❌ File not found! Please enter a valid file name to verify!")
+                print("\nAvailable files in current folder:")
+                found_files = False
+
+                for file in os.listdir('.'):
+                    if file.lower().endswith('.txt') and file not in ['stop_words.txt', 'censorship.txt']:
+                        print(f"  - {file}")  # выводим название каждого найденного файла
+                        found_files = True
+                if not found_files:
+                    print("\nPlease try again:")
+
+
+
+
+
 
