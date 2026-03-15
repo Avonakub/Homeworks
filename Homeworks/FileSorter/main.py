@@ -6,7 +6,7 @@ def show_menu():
           "2 - Change name\n"
           "3 - Reading text. The most frequently encountered word\n"
           "4 - Replace with *****\n"
-          "5 - Caesar cipher\n"
+          "5 - Grade less than 3 points\n"
           "6 - Vigenère cipher\n"
           "7 - Run-Length Encoding\n"
           "8 - Spam\n"
@@ -284,6 +284,101 @@ while is_continue:
                 if not found_files:
                     print("\nPlease try again:")
 
+# ==========================================================
+# TASK 5: Grade less than 3 points
+# ==========================================================
+    if user_choice == "5":
+
+        print("\nMake sure your file with grades is in the same folder as this program!")
+        print(f"Current directory: {os.getcwd()}")
+
+        grades_data = None  # переменная для хранения оценок
+        while grades_data is None:  # бесконечный цикл пока не загрузится файл или не выйдут из цикла
+            # имя файла и убираем пробелы
+            filename = input("Enter the file name with grades (e.g., class_7a.txt) or 'q' to exit: ").strip()
+            if filename.lower() == 'q':
+                print("Returning to main menu...")
+                break
+            if os.path.exists(filename):  # проверяем есть ли файл
+                with open(filename, 'r', encoding='utf-8') as file:
+                    # читаем весь файл, заменяем запятые на пробелы и разбиваем на слова
+                    raw_content = file.read().replace(',', ' ').split()
+                    # оставляем только непустые слова и убираем лишние пробелы
+                    temp_grades = [word.strip() for word in raw_content if word.strip()]
+
+                    # проверка каждой строки
+                    with open(filename, 'r', encoding='utf-8') as check_file:
+                        lines = check_file.readlines()
+                        valid = True  # флаг, что файл корректный
+                        # перебираем все строки с номерами (начиная с 1)
+                        for line_num, line in enumerate(lines, 1):
+                            parts = line.strip().split()  # разбиваем строку на слова
+                            if not parts:
+                                continue
+                            if len(parts) < 3: # проверяем, что есть фамилия, имя и оценка, иначе ошибка
+                                print(f"\n⚠️ Error in line {line_num}: missing data (need surname, name, grade)")
+                                valid = False
+                                break
+                            try:
+                                int(parts[-1])  # последнее слово число, если не получилось, то ошибка
+                            except ValueError:
+                                print(f"\n⚠️ Error in line {line_num}: grade must be a number")
+                                valid = False
+                                break
+
+                    if not valid:
+                        input("Fix the file and press Enter to try again...")
+                        continue  # предлагаем исправить файл и попробовать снова
+
+                if not temp_grades: # проверяем, не пустой ли файл
+                    print(f"\n⚠️ The file '{filename}' is EMPTY!")
+                    user_input = input("Press Enter to try again or type 'q' to exit: ").strip().lower()
+                    if user_input == 'q':
+                        break
+                    continue
+                # проверяем, есть ли в файле цифры (оценки), если нет, ошибка
+                has_digits = any(word.isdigit() for word in temp_grades)
+                if not has_digits:
+                    print(f"\n⚠️ The file '{filename}' contains text, but NO GRADES (numbers) found!")
+                    user_input = input("Fix the file and press Enter to try again (or 'q' to exit): ").strip().lower()
+                    if user_input == 'q':
+                        break
+                    continue
+                grades_data = temp_grades  # если все ок, сохраняем данные и пишем, что сохранено
+                print(f"✅ Grades loaded successfully!")
+
+                # поиск оценок ниже 3
+                with open(filename, 'r', encoding='utf-8') as file:
+                    print("\nStudents with a grade below 3:")
+                    print("-" * 50)
+                    found = False  # флаг были ли найдены ученики
+                    for line in file:
+                        parts = line.split()
+                        if len(parts) < 3:
+                            continue
+                        if not parts:
+                            continue
+                        try:
+                            surname = parts[0]  # фамилия
+                            name = parts[1]  # имя
+                            grade = int(parts[-1])  # оценка
+                            if grade < 3:  # если меньше 3, выводим данные ученика
+                                print(f"{surname} {name}: {grade}")
+                                found = True  # если нашли меняем флаг
+                        except ValueError:
+                            continue
+                    if not found:  # если не нашли выводим
+                        print("No students with grades below 3 found!")
+                    print("-" * 50)
+            else:
+                print(f"\n❌ File '{filename}' not found!")  # выводим, если файл не найден
+                print("Please add the student's last name, first name, and grade line by line.")
+                user_input = input("Press Enter to try again or type 'q' to exit: ").strip().lower()
+                if user_input == 'q':
+                    print("Exiting to main menu...")
+                    break
+        if grades_data is None:  # если вышли из цикла через q возврат в меню
+            continue
 
 
 
