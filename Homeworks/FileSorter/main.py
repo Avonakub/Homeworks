@@ -7,9 +7,9 @@ def show_menu():
           "3 - Reading text. The most frequently encountered word\n"
           "4 - Replace with *****\n"
           "5 - Grade less than 3 points\n"
-          "6 - Vigenère cipher\n"
-          "7 - Run-Length Encoding\n"
-          "8 - Spam\n"
+          "6 - Sum of digits\n"
+          "7 - \n"
+          "8 - \n"
           "0 - Exit")
     print("➤➤➤")
 
@@ -380,7 +380,58 @@ while is_continue:
         if grades_data is None:  # если вышли из цикла через q возврат в меню
             continue
 
+# ==========================================================
+# TASK 6: Sum of digits
+# ==========================================================
+    if user_choice == "6":
 
+        print("\nMake sure your file is in the same folder as this program!")
+        print(f"Current directory: {os.getcwd()}")
+
+        numbers = None
+        while numbers is None:
+            filename = input("Enter the file name with numbers or 'q' to exit: ").strip()
+            if filename.lower() == 'q':
+                print("Returning to main menu...")
+                break
+            if os.path.exists(filename):  # проверяем есть ли файл
+                with open(filename, 'r', encoding='utf-8') as file:
+                    file_content = file.read()
+
+                    if not file_content.strip():  # проверяем, не пустой ли файл
+                        print(f"\n⚠️ The file '{filename}' is EMPTY!")
+                        user_input = input("Press Enter to try again or type 'q' to exit: ").strip().lower()
+                        if user_input == 'q':
+                            break
+                        continue
+                    # регулярка для поиска чисел в тексте
+                    numbers_found = re.findall(r'\d+', file_content)
+
+                    if not numbers_found:  # если чисел не найдено
+                        print(f"\n⚠️ No numbers found in the file!")
+                        user_input = input("Press Enter to try again or type 'q' to exit: ").strip().lower()
+                        if user_input == 'q':
+                            break
+                        continue
+
+                    # преобразуем строки в числа и суммируем
+                    total_sum = 0
+                    for num_str in numbers_found:
+                        total_sum += int(num_str)
+                    print(f"\nNumbers found: {numbers_found}")
+                    print(f"Sum of all numbers: {total_sum}")
+                    numbers = total_sum  # если все ок сохраняем
+                    print(f"✅ File processed successfully!")
+
+            else:
+                print(f"\n❌ File '{filename}' not found!")
+                print("Please add numbers to the file.")
+                user_input = input("Press Enter to try again or type 'q' to exit: ").strip().lower()
+                if user_input == 'q':
+                    print("Exiting to main menu...")
+                    break
+        if numbers is None:
+            continue
 
 
 
