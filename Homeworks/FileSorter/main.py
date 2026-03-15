@@ -8,7 +8,7 @@ def show_menu():
           "4 - Replace with *****\n"
           "5 - Grade less than 3 points\n"
           "6 - Sum of digits\n"
-          "7 - \n"
+          "7 - Caesar cipher\n"
           "8 - \n"
           "0 - Exit")
     print("➤➤➤")
@@ -433,5 +433,79 @@ while is_continue:
         if numbers is None:
             continue
 
+# ==========================================================
+# TASK 7: Caesar cipher
+# ==========================================================
+    if user_choice == "7":
 
+        print("\nMake sure your file is in the same folder as this program!")
+        print(f"Current directory: {os.getcwd()}")
 
+        cipher = None
+        while cipher is None:
+            filename = input("Enter the file name with an English strings for encryption or 'q' to exit: ").strip()
+            if filename.lower() == 'q':
+                print("Returning to main menu...")
+                break
+            if os.path.exists(filename):  # проверяем есть ли файл
+                with open(filename, 'r', encoding='utf-8') as file:
+                    lines = file.readlines()  # читаем файл построчно
+
+                    # проверяем, не пустой ли файл
+                    if not lines or not ''.join(lines).strip():
+                        print(f"\n⚠️ The file '{filename}' is EMPTY!")
+                        user_input = input("Press Enter to try again or type 'q' to exit: ").strip().lower()
+                        if user_input == 'q':
+                            break
+                        continue
+                    # проверяем наличие русских букв
+                    has_russian = False
+                    for char in lines:
+                        if 'а' <= char.lower() <= 'я' or char.lower() == 'ё':
+                            has_russian = True
+                            break
+                        if has_russian:
+                            break
+                    if has_russian:
+                        print(f"\n⚠️ The file '{filename}' contains text with russian letters!")
+                        user_input = input("Fix the file and press Enter to try again (or 'q' to exit): ").strip().lower()
+                        if user_input == 'q':
+                            break
+                        continue
+
+                    encrypted_lines = []
+                    for line_num, line in enumerate(lines, 1):  # line_num начинается с 1
+                        shift = line_num  # шаг = номер строки
+                        encrypted_line = ""
+
+                        for char in line:
+                            if "a" <= char.lower() <= "z": # строчные буквы
+                                start = ord("A") if char.isupper() else ord("a")
+                                # (позиция буквы + шаг) % 26 + позиция 'a'
+                                new_char = chr((ord(char) - ord('a') + shift) % 26 + ord('a'))
+                                encrypted_line += new_char
+                            elif 'A' <= char <= 'Z':  # заглавные буквы
+                                new_char = chr((ord(char) - ord('A') + shift) % 26 + ord('A'))
+                                encrypted_line += new_char
+                            else:
+                                encrypted_line += char  # не буквы оставляем без изменений
+                        encrypted_lines.append(encrypted_line)
+                        print(f"Line {line_num} (shift {shift}): {encrypted_line.strip()}")
+
+                    encrypted_filename = f"encrypted_{filename}"
+                    with open(encrypted_filename, 'w', encoding='utf-8') as out_file:
+                        out_file.writelines(encrypted_lines)
+
+                    print(f"\n✅ File encrypted successfully!")
+                    print(f"Encrypted file saved as: {encrypted_filename}")
+                    cipher = encrypted_lines  # чтобы выйти из цикла
+
+            else:
+                print(f"\n❌ File '{filename}' not found!")
+                print("Please add numbers to the file.")
+                user_input = input("Press Enter to try again or type 'q' to exit: ").strip().lower()
+                if user_input == 'q':
+                    print("Exiting to main menu...")
+                    break
+        if cipher is None:
+            continue
