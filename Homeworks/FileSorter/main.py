@@ -1,5 +1,10 @@
 import os
 import re
+import json
+import csv
+
+JSON_FILE = "users.json"
+CSV_FILE = "users.csv"
 
 def show_menu():
     print("1 - OS. Creating folders, rename files\n"
@@ -9,7 +14,7 @@ def show_menu():
           "5 - Grade less than 3 points\n"
           "6 - Sum of digits\n"
           "7 - Caesar cipher\n"
-          "8 - \n"
+          "8 - JSON and CSV\n"
           "0 - Exit")
     print("➤➤➤")
 
@@ -17,6 +22,418 @@ def show_menu():
 def main():
     print(f"Operating system: {os.name}")
     print(f"Current directory: {os.getcwd()}")
+
+
+def handle_file_not_found(filename):
+
+    print(f"\n❌ File '{filename}' not found!")
+    print("Please add numbers to the file.")
+    user_input = input("Press Enter to try again or type 'q' to exit: ").strip().lower()
+
+    if user_input == 'q':
+        print("Exiting to main menu...")
+        return True  # пользователь хочет выйти
+    return False  # пользователь хочет попробовать снова
+
+
+# ====================== FUNCTIONS FOR JOB WITH JSON ==============================
+def read_json():  # читаем данные с JSON файла
+    with open(JSON_FILE, 'r', encoding='utf-8') as file:
+        return json.load(file)
+
+
+def write_json(data):  # записываем данные в JSON файл
+    with open(JSON_FILE, 'w', encoding='utf-8') as file:
+        json.dump(data, file, indent=4)
+
+
+def json_to_csv(JSON_FILE, CSV_FILE):  # конвертация
+    try:
+        data = read_json()
+
+        with open(CSV_FILE, 'w', encoding='utf-8', newline='') as file:
+            if data:
+                writer = csv.DictWriter(file, fieldnames=data[0].keys())
+                writer.writeheader()
+                writer.writerows(data)
+        print(f"✅ Converted '{JSON_FILE}' to '{CSV_FILE}'")
+    except FileNotFoundError:
+        print(f"❌ Error: File '{JSON_FILE}' not found. Verify that the file exists in current directory: {os.getcwd()}\n"
+              f"and that the name is correct.")
+
+
+def add_employee_to_json():  # добавляем нового сотрудника в JSON файл
+
+    try:
+        data = read_json()
+    except FileNotFoundError:
+        print(f"❌ File {JSON_FILE} not found!")
+        return
+    except json.JSONDecodeError:
+        print(f"❌ Invalid JSON format in {JSON_FILE}!")
+        return
+
+    print("\n" + "=" * 50)
+    print("ADDING A NEW EMPLOYEE")
+    print("=" * 50)
+
+    while True:
+        name = input("Enter name of the employee: ").strip()
+        if name != "":
+            print(f"✅ Name accepted: {name}")
+            break
+        else:
+            print("❌ Name cannot be empty! Please try again.")
+
+    while True:
+        birthday = input("Enter date of birth (DD.MM.YYYY): ").strip()
+        parts = birthday.split('.')
+
+        if len(parts) != 3:
+            print("❌ Invalid format! Use DD.MM.YYYY (e.g., 02.10.1990)")
+            continue
+
+        day, month, year = parts
+
+        if not (day.isdigit() and month.isdigit() and year.isdigit()):
+            print("❌ Use only numbers! Format: DD.MM.YYYY")
+            continue
+
+        day_int = int(day)
+        month_int = int(month)
+        year_int = int(year)
+
+        has_error = False
+        if day_int < 1 or day_int > 31:
+            print("❌ Day must be 01-31")
+            has_error = True
+        if month_int < 1 or month_int > 12:
+            print("❌ Month must be 01-12")
+            has_error = True
+
+        if year_int < 1950 or year_int > 2008:
+            print("❌ Year must be 1950-2008")
+            has_error = True
+        if has_error:
+            print("Please try again.")
+            continue
+
+        print(f"✅ Date accepted: {birthday}")
+        break
+
+    while True:
+        try:
+            height = float(input("Enter height (m): "))
+            if 1.40 <= height <= 2.30:
+                print(f"✅ Height accepted: {height}")
+                break
+            print("❌ Height must be 1.40 - 2.30 meters! Please try again.")
+        except ValueError:
+            print("❌ Height must be a number! Please try again.")
+
+    while True:
+        try:
+            weight = float(input("Enter weight (kg): "))
+            if weight > 35:
+                print(f"✅ Weight accepted: {height}")
+                break
+            print("❌ Weight must be that greater 35 kg! Please try again.")
+        except ValueError:
+            print("❌ Weight must be a number! Please try again.")
+
+    while True:
+        car_input = input("Have a car? (y/n): ").lower().strip()
+        if car_input in ['y', 'n', 'yes', 'no']:
+            car = car_input in ['y', 'yes']
+            print(f"✅ Answer accepted: {car}")
+            break
+        print("❌ Please enter 'y' or 'n'!")
+
+    while True:
+        print("Programming languages (comma separated):")
+        languages_input = input().strip()
+        languages = [lang.strip() for lang in languages_input.split(',') if lang.strip()]
+        if languages:
+            print(f"✅ languages accepted: {languages_input}")
+            break
+        print("❌ At least one programming language is required!")
+
+    # создание и сохранение сотрудника
+    new_employee = {
+        "name": name,
+        "birthday": birthday,
+        "height": height,
+        "weight": weight,
+        "car": car,
+        "languages": languages
+    }
+
+    try:
+        data.append(new_employee)
+        write_json(data)
+        print("\n" + "=" * 50)
+        print(f"✅ Employee {name} successfully added to JSON!")
+        print("=" * 50)
+    except Exception as e:
+        print(f"❌ Error saving data: {e}")
+
+
+def read_csv():  # читает данные из CSV файла
+    with open(CSV_FILE, 'r', encoding='utf-8') as file:
+        return list(csv.DictReader(file))
+
+
+def write_csv(data):  # записывает данные в CSV файл
+    with open(CSV_FILE, 'w', encoding='utf-8', newline='') as file:
+        if data:
+            writer = csv.DictWriter(file, fieldnames=data[0].keys())
+            writer.writeheader()
+            writer.writerows(data)
+
+
+def add_employee_to_csv():  # добавляет сотрудника в CSV файл
+    try:
+        data = read_csv()
+
+        print("\n" + "=" * 50)
+        print("ADDING A NEW EMPLOYEE")
+        print("=" * 50)
+
+        while True:
+            name = input("Enter name of the employee: ").strip()
+            if name != "":
+                print(f"✅ Name accepted: {name}")
+                break
+            else:
+                print("❌ Name cannot be empty! Please try again.")
+
+        while True:
+            birthday = input("Enter date of birth (DD.MM.YYYY): ").strip()
+            parts = birthday.split('.')
+
+            if len(parts) != 3:
+                print("❌ Invalid format! Use DD.MM.YYYY (e.g., 02.10.1990)")
+                continue
+
+            day, month, year = parts
+
+            if not (day.isdigit() and month.isdigit() and year.isdigit()):
+                print("❌ Use only numbers! Format: DD.MM.YYYY")
+                continue
+
+            day_int = int(day)
+            month_int = int(month)
+            year_int = int(year)
+
+            has_error = False
+            if day_int < 1 or day_int > 31:
+                print("❌ Day must be 01-31")
+                has_error = True
+            if month_int < 1 or month_int > 12:
+                print("❌ Month must be 01-12")
+                has_error = True
+
+            if year_int < 1950 or year_int > 2008:
+                print("❌ Year must be 1950-2008")
+                has_error = True
+            if has_error:
+                print("Please try again.")
+                continue
+
+            print(f"✅ Date accepted: {birthday}")
+            break
+
+        while True:
+            try:
+                height = float(input("Enter height (m): "))
+                if 1.40 <= height <= 2.30:
+                    print(f"✅ Height accepted: {height}")
+                    break
+                print("❌ Height must be 1.40 - 2.30 meters! Please try again.")
+            except ValueError:
+                print("❌ Height must be a number! Please try again.")
+
+        while True:
+            try:
+                weight = float(input("Enter weight (kg): "))
+                if weight > 35:
+                    print(f"✅ Weight accepted: {height}")
+                    break
+                print("❌ Weight must be that greater 35 kg! Please try again.")
+            except ValueError:
+                print("❌ Weight must be a number! Please try again.")
+
+        while True:
+            car_input = input("Have a car? (y/n): ").lower().strip()
+            if car_input in ['y', 'n', 'yes', 'no']:
+                car = car_input in ['y', 'yes']
+                print(f"✅ Answer accepted: {car}")
+                break
+            print("❌ Please enter 'y' or 'n'!")
+
+        while True:
+            print("Programming languages (comma separated):")
+            languages_input = input().strip()
+            languages = [lang.strip() for lang in languages_input.split(',') if lang.strip()]
+            if languages:
+                print(f"✅ languages accepted: {languages_input}")
+                break
+            print("❌ At least one programming language is required!")
+        languages = [lang.strip() for lang in input().split(',') if lang.strip()]
+
+        new_employee = {
+            "name": name,
+            "birthday": birthday,
+            "height": str(height),
+            "weight": str(weight),
+            "car": str(car),
+            "languages": ', '.join(languages)
+        }
+
+        data.append(new_employee)
+        write_csv(data)
+        print(f"✅ Employee {name} adding in CSV")
+
+    except Exception as e:
+        print(f"❌ Error: {e}")
+
+
+def find_employee_by_name():  # поиск сотрудника по имени
+    try:
+        data = read_json()
+        while True:
+            name = input("Enter name to search: ").strip()
+            if name != "":
+                print(f"✅ Name accepted: {name}")
+                break
+            else:
+                print("❌ Name cannot be empty! Please try again.")
+
+        search_name = name.lower().strip()
+
+        found = []
+        for emp in data:
+            emp_name = emp['name'].lower().strip()
+            if search_name in emp_name:
+                found.append(emp)
+
+        if found:
+            print("\nFOUND EMPLOYEES")
+            print("=" * 30)
+            for emp in found:
+                print(f"Name: {emp['name']}")
+                print(f"Birthday: {emp['birthday']}")
+                print(f"Height: {emp['height']} cm")
+                print(f"Weight: {emp['weight']} kg")
+                print(f"Car: {'yes' if emp['car'] else 'no'}")
+                print(f"Languages: {', '.join(emp['languages'])}")
+                print("-" * 30)
+        else:
+            print(f"❌ Employee with name '{name}' not found")
+    except Exception as e:
+        print(f"❌ Error: {e}")
+
+
+def filter_by_language():  # фильтр по языку программирования
+    try:
+        data = read_json()
+        while True:
+            language = input("Enter programming language: ").strip()
+            if language != "":
+                print(f"✅ Programming language accepted: {language}")
+                break
+            else:
+                print("❌ Programming language cannot be empty! Please try again.")
+
+        search_language = language.lower().strip()
+
+        found = []
+        for emp in data:
+            knows_language = False
+            for lang in emp['languages']:
+                if lang.lower() == search_language:
+                    knows_language = True
+                    break
+            if knows_language:
+                found.append(emp)
+
+        if found:
+            print(f"\nEMPLOYEES WHO KNOW {language}")
+            print("=" * 30)
+            for emp in found:
+                print(f"Name: {emp['name']}")
+                print(f"Languages: {', '.join(emp['languages'])}")
+                print("=" * 30)
+            print(f"Total: {len(found)} employee(s)")
+        else:
+            print(f"❌ No employees who know {language}")
+    except Exception as e:
+        print(f"❌ Error: {e}")
+
+
+def filter_by_birth_year():  # фильтр по году рождения
+    try:
+        data = read_json()
+        while True:
+            try:
+                year = input("Enter birth year (e.g, 1990): ").strip()
+
+                if not year:
+                    print("❌ Year cannot be empty! Please try again.")
+                    continue
+
+                year = int(year)
+
+                if year < 1950 or year > 2008:
+                    print("❌ Year must be between 1950 and 2008!")
+                    continue
+
+                print(f"✅ Year accepted: {year}")
+                break
+            except ValueError:
+                print("❌ Please enter a valid number!")
+                continue
+
+        filtered = []
+        for emp in data:
+            try:
+                emp_year = int(emp['birthday'].split('.')[-1])
+                if emp_year < year:
+                    filtered.append(emp)
+            except (ValueError, IndexError, AttributeError):
+                print(f"⚠️ Skipping employee '{emp.get('name', 'Unknown')}' - invalid birthday format")
+                continue
+
+        if filtered:
+            avg_height = sum(emp['height'] for emp in filtered) / len(filtered)
+            print(f"\nEMPLOYEES WITH BIRTH YEAR < {year}")
+            print("=" * 30)
+            print(f"Count: {len(filtered)}")
+            print(f"Average height: {avg_height:.1f} cm")
+
+            print("\nEMPLOYEES LIST:")
+            print("=" * 30)
+            for emp in filtered:
+                print(f"Name: {emp['name']}, Year: {emp['birthday'].split('.')[-1]}, Height: {emp['height']} cm")
+        else:
+            print(f"❌ No employees with birth year less than {year}")
+    except Exception as e:
+        print(f"❌ Error: {e}")
+
+
+def print_menu_8_task():  # меню для 8 задания
+    print()
+    print('TO MANAGE EMPLOYEE DATA, CHECK IF THE FILE "users.join" IN THE CURRENT DIRECTORY.')
+    print("="*50)
+    print("1 - Convert JSON to CSV")
+    print("2 - Add employee to JSON")
+    print("3 - Add employee to CSV")
+    print("4 - Find employee by name")
+    print("5 - Filter by programming language")
+    print("6 - Filter by birth year (average height)")
+    print("0 - Exit")
+    print("➤➤➤")
+
 
 is_continue = True
 while is_continue:
@@ -27,6 +444,7 @@ while is_continue:
 # TASK 1: OS. Creating folders, rename files
 # ============================================
     if user_choice == "1":
+        print("-" * 50)
         main()
         current_files = os.listdir()
         extentions = set()
@@ -85,7 +503,7 @@ while is_continue:
         if os.path.exists('old_name.txt'):
             os.rename('old_name.txt', 'new_name.txt')
             print(f"Renamed old name to new_name.txt")
-    print('-' * 50)
+    print("-" * 50)
 
 # ============================================
 # TASK 2: Name change
@@ -227,7 +645,7 @@ while is_continue:
                 print(f"✅ Stop-words loaded: {stop_words}")
             else:
                 print("\n❌ File stop_words.txt not found!")
-                print("Please create a file stop_words.txt in the current folder and add stop"
+                print("Please create a file stop_words.txt in the current folder and add stop\n"
                       "words to it, separated by commas.")
                 user_input = input("Press Enter to try again or type 'q' to exit: ").strip().lower()
 
@@ -370,6 +788,7 @@ while is_continue:
                     if not found:  # если не нашли выводим
                         print("No students with grades below 3 found!")
                     print("-" * 50)
+
             else:
                 print(f"\n❌ File '{filename}' not found!")  # выводим, если файл не найден
                 print("Please add the student's last name, first name, and grade line by line.")
@@ -422,13 +841,8 @@ while is_continue:
                     print(f"Sum of all numbers: {total_sum}")
                     numbers = total_sum  # если все ок сохраняем
                     print(f"✅ File processed successfully!")
-
-            else:
-                print(f"\n❌ File '{filename}' not found!")
-                print("Please add numbers to the file.")
-                user_input = input("Press Enter to try again or type 'q' to exit: ").strip().lower()
-                if user_input == 'q':
-                    print("Exiting to main menu...")
+            else:  # файл не найден
+                if handle_file_not_found(filename):  # вызываем функцию
                     break
         if numbers is None:
             continue
@@ -499,13 +913,44 @@ while is_continue:
                     print(f"\n✅ File encrypted successfully!")
                     print(f"Encrypted file saved as: {encrypted_filename}")
                     cipher = encrypted_lines  # чтобы выйти из цикла
-
-            else:
-                print(f"\n❌ File '{filename}' not found!")
-                print("Please add numbers to the file.")
-                user_input = input("Press Enter to try again or type 'q' to exit: ").strip().lower()
-                if user_input == 'q':
-                    print("Exiting to main menu...")
+            else:  # файл не найден
+                if handle_file_not_found(filename):  # вызываем функцию
                     break
         if cipher is None:
             continue
+
+# ==========================================================
+# TASK 8: JSON and CSV
+# ==========================================================
+    if user_choice == "8":
+
+        main()
+        while True:
+            print_menu_8_task()  # Вызвали функцию
+            user_choice = input("Enter your choice HERE ➤ : ")
+
+            if user_choice == '1':
+                json_to_csv(JSON_FILE, CSV_FILE)
+
+            elif user_choice == '2':
+                add_employee_to_json()
+
+            elif user_choice == '3':
+                add_employee_to_csv()
+
+            elif user_choice == '4':
+                find_employee_by_name()
+
+            elif user_choice == '5':
+                filter_by_language()
+
+            elif user_choice == '6':
+                filter_by_birth_year()
+
+            elif user_choice == "0":
+                print("Returning to main menu...")
+                break
+
+    elif user_choice == "0":
+        print("Goodbye!")
+        is_continue = False
