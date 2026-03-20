@@ -153,6 +153,64 @@ def math_menu():
 
 
 my_math = Math()
+# ====================== Class Car ==============================
+class Car:
+    def __init__(self, color, type_car, year):
+        self.color=color
+        self.type_car=type_car
+        self.year=year
+
+
+    def started_car(self):
+        print("✅ The car is started")
+
+
+    def stoped_car(self):
+        print("🛑 The car is stopped")
+
+    def info_about_car(self):
+        print("CAR INFORMATION")
+        print("=" * 25)
+        print(f"Color: {self.color}")
+        print(f"Type: {self.type_car}")
+        print(f"Year of release: {self.year}")
+
+
+    def enter_value_car(self):
+        while True:
+            color = input("Enter color a car: ")
+            if color !="":
+                self.color = color
+                break
+            else:
+                print("Information about the car color cannot be empty!")
+
+        while True:
+            type_car = input("Enter car type a car: ")
+            if type_car !="":
+                self.type_car = type_car
+                break
+            else:
+                print("Information about the car type cannot be empty!")
+
+        while True:
+            try:
+                year = input("Enter car year a car: ")
+                if year == "":
+                    print("Information about the car year cannot be empty!")
+                    continue
+                year = int(year)
+
+                if year < 1950 or year > 2026:
+                    print("❌ Error: Year must be between 1950 and 2026!")
+                    continue
+                self.year = year
+                break
+            except ValueError:
+                print("❌ Error: Please enter a valid number.")
+
+
+my_car = Car(None, None, None)
 
 
 is_continue = True
@@ -186,7 +244,7 @@ while is_continue:
             elif user_choice == '6':
                 my_robot.position()
             elif user_choice == "0":
-                print("↩️Returning to main menu...")
+                print("↩️ Returning to main menu...")
                 break
             else:
                 print("❌ Invalid choice! Try again.")
@@ -208,10 +266,34 @@ while is_continue:
                 first, second = my_math.get_numbers()
                 my_math.division(first, second)
             elif user_choice == "0":
-                print("↩️Returning to main menu...")
+                print("↩️ Returning to main menu...")
                 break
             else:
                 print("❌ Invalid choice! Try again.")
+
+    elif user_choice == "3":
+        my_car.enter_value_car()
+        my_car.info_about_car()
+        print("-" * 25)
+        while True:
+            print("\nDRIVING CAR")
+            print('=' * 25)
+            print("1 - Start the car")
+            print("2 - Turn off the car")
+            print("0 - Exit")
+
+            car_action = input("Enter action HERE ➤ : ")
+
+            if car_action == "1":
+                my_car.started_car()
+            elif car_action == "2":
+                my_car.stoped_car()
+            elif car_action == "0":
+                print("↩️ Returning to main menu...")
+                break
+            else:
+                print("❌ Invalid choice! Try again.")
+
 
 
 
