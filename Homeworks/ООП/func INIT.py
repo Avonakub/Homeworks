@@ -165,7 +165,7 @@ class Car:
         print("✅ The car is started")
 
 
-    def stoped_car(self):
+    def stopped_car(self):
         print("🛑 The car is stopped")
 
     def info_about_car(self):
@@ -211,6 +211,19 @@ class Car:
 
 
 my_car = Car(None, None, None)
+
+
+# ====================== Class Soda ==============================
+class Soda:
+    def __init__(self, flavor=None):
+        self.flavor=flavor
+
+
+    def flavor_soda(self):
+        if self.flavor:
+            print(f"You have flavored {self.flavor} soda")
+        else:
+            print("You have regular soda.")
 
 
 is_continue = True
@@ -287,19 +300,21 @@ while is_continue:
             if car_action == "1":
                 my_car.started_car()
             elif car_action == "2":
-                my_car.stoped_car()
+                my_car.stopped_car()
             elif car_action == "0":
                 print("↩️ Returning to main menu...")
                 break
             else:
                 print("❌ Invalid choice! Try again.")
 
-
-
-
-
-
-
+    elif user_choice == "4":
+        flavor = input("Enter the soda flavor, if no flavor is specified, leave the line blank : ")
+        if flavor == "":
+            my_soda = Soda()
+        else:
+            my_soda = Soda(flavor)
+        my_soda.flavor_soda()
+        print("-" * 25)
 
     elif user_choice == "0":
         print("👋 Goodbye!")
