@@ -96,25 +96,25 @@ class BeeElephant:
 
     def trumpet(self):
         if self.elephant_part >= self.bee_part:
-            return "tu-tu-doo-doo"
-        return "wzzzz"
+            return "ту-ту-ду-ду"
+        return "взззз"
 
 
     def eat(self, meal, value ):
-        if meal == "nectar":
+        if meal == "нектар":
             self.elephant_part -= value
             self.bee_part += value
-        elif meal == "grass":
+        elif meal == "трава":
             self.bee_part -= value
             self.elephant_part += value
         else:
-            raise ValueError("meal должен быть 'nectar' или 'grass'")
+            raise ValueError("Кормить нужно только нектаром или травой")
         self.bee_part = max(0, min(100, self.bee_part))
         self.elephant_part = max(0, min(100, self.elephant_part))
 
 
     def __str__(self):
-        return f"ПчёлоСлон с параметрами {self.bee_part} / {self.elephant_part}"
+        return f"ПчёлоСлон с параметрами Пчела: {self.bee_part} / Слон: {self.elephant_part}"
 
 
 def show_menu():
@@ -335,29 +335,39 @@ while is_continue:
 
             elif user_choice == "3":
 
-                print("Вам нужно ввести число от 1 до 5. Это шаг, который будет вычитаться\n"
+                print("Вам нужно ввести число от 1 до 10. Это шаг, который будет вычитаться\n"
                       "от части слона или пчелы в зависимости от того, чем вы покормите ПчёлоСлона;)")
 
                 while True:
-                    value_input = input("Введите значение от 1 до 5 (или Enter для выхода): ")
+                    value_input = input("Введите значение от 1 до 10 (или Enter для выхода): ")
                     if value_input == "":
                         print("↩️ Возврат в главное меню!")
                         break
                     try:
                         value_input = int(value_input)
-                        if 1 <= value_input <= 5:
+                        if 1 <= value_input <= 10:
                             while True:
-                                meal_input = input("Введите еду для ПчёлоСлона (nectar или grass): ").strip()
-                                if meal_input == "nectar" or meal_input == "grass":
-                                    bee_elephant.eat(meal_input, value_input)
-                                    print(f"✅ Покормили {meal_input}. "
-                                          f"Текущее соотношение: "
-                                          f"Пчела {bee_elephant.bee_part} / Слон {bee_elephant.elephant_part}")
-                                    break
+                                meal_input = input("Введите еду для ПчёлоСлона (нектар или трава): ").strip()
+                                if meal_input == "нектар":
+                                    if value_input > bee_elephant.elephant_part:
+                                        print("❌ Значение слона не может стать меньше 0!")
+                                    else:
+                                        bee_elephant.eat("нектар", value_input)
+                                        print(
+                                            f"✅ Покормили нектаром. Пчела: {bee_elephant.bee_part} / Слон: {bee_elephant.elephant_part}")
+                                        break
+                                elif meal_input == "трава":
+                                    if value_input > bee_elephant.bee_part:
+                                        print("❌ Значение пчелы не может стать меньше 0!")
+                                    else:
+                                        bee_elephant.eat("трава", value_input)
+                                        print(
+                                            f"✅ Покормили травой. Пчела: {bee_elephant.bee_part} / Слон: {bee_elephant.elephant_part}")
+                                        break
                                 else:
-                                    print("❌ Некорректная еда. Введите только nectar или grass")
+                                    print("❌ Некорректная еда. Введите только нектар или трава")
                         else:
-                            print("❌ Ошибка: число должно быть от 1 до 5!")
+                            print("❌ Ошибка: число должно быть от 1 до 10!")
                     except ValueError:
                         print("❌ Ошибка: введите целое число!")
 
