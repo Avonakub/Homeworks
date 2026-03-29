@@ -84,6 +84,39 @@ class Warehouse:
         return self.__items
 
 
+class BeeElephant:
+    def __init__(self, bee_part, elephant_part):
+        self.bee_part = bee_part
+        self.elephant_part = elephant_part
+
+
+    def fly(self):
+        return self.bee_part >= self.elephant_part
+
+
+    def trumpet(self):
+        if self.elephant_part >= self.bee_part:
+            return "tu-tu-doo-doo"
+        return "wzzzz"
+
+
+    def eat(self, meal, value ):
+        if meal == "nectar":
+            self.elephant_part -= value
+            self.bee_part += value
+        elif meal == "grass":
+            self.bee_part -= value
+            self.elephant_part += value
+        else:
+            raise ValueError("meal должен быть 'nectar' или 'grass'")
+        self.bee_part = max(0, min(100, self.bee_part))
+        self.elephant_part = max(0, min(100, self.elephant_part))
+
+
+    def __str__(self):
+        return f"ПчёлоСлон с параметрами {self.bee_part} / {self.elephant_part}"
+
+
 def show_menu():
     print("1 - Товары на складе\n"
           "2 - ПчёлоСлон\n"
@@ -104,7 +137,7 @@ def show_menu_goods():
           "6 - Сортировать по цене\n"
           "7 - Добавить новый товар\n"
           "8 - Сложение товаров по цене\n"
-          "9 - Выход")
+          "0 - Выход")
     print("➤➤➤")
 
 
@@ -115,6 +148,16 @@ def create_default_warehouse():
     warehouse.add_product(Goods("Холодильник", "5 Элемент", 2900))
     warehouse.add_product(Goods("Телевизор", "5 Элемент", 1600))
     return warehouse
+
+
+def show_menu_bee_elephant():
+    print("=" * 40 + "\n"
+          "Нажмите:\n"
+          "1 - Чтобы узнать не меньше ли часть пчелы части слона\n"
+          "2 - Проверка звука в зависимости от соотношения частей\n"
+          "3 - Можно покормить пчелу словом nectar или слона словом grass\n"
+          "0 - Выход")
+    print("➤➤➤")
 
 
 is_continue = True
@@ -245,11 +288,91 @@ while is_continue:
                     except TypeError as e:
                         print(f"Ошибка: {e}")
 
-            elif user_choice == "9":
+            elif user_choice == "0":
                 print("↩️ Возврат в главное меню!")
                 break
             else:
                 print("❌ Неверный выбор! Попробуйте снова.")
+
+    elif user_choice == "2":
+
+        print("Создание ПчёлоСлона..")
+        print("❗После ввода значения для пчелы, для слона рассчет будет произведен автоматически (100 - значение пчелы)")
+        print("=" * 105)
+        while True:
+            try:
+                bee_part = input("Введите значение для пчелы от 1 до 99: ")
+                if bee_part == "":
+                    print("❌ Ошибка: значение не может быть пустым!")
+                    print("Попробуйте снова.")
+                    continue
+                bee_part = int(bee_part)
+                if bee_part <= 0 or bee_part > 99:
+                    print("❌ Значение не может быть отрицательным, больше 99 или равным нулю!")
+                    continue
+                print(f"✅ Значение пчелы: {bee_part} принято.")
+                break
+            except ValueError:
+                print("❌ Ошибка: значение должно быть целым числом!")
+                print("Попробуйте снова.")
+
+        max_elephant = 100 - bee_part
+        elephant_part = max_elephant
+        print(f"Параметр слона: {max_elephant}")
+        print("🟢 ПчёлоСлон создан")
+        bee_elephant = BeeElephant(bee_part, elephant_part)
+        print(bee_elephant)
+
+        while True:
+            show_menu_bee_elephant()
+            user_choice = input("Введите свой выбор здесь ➤ : ")
+
+            if user_choice == "1":
+                print(bee_elephant.fly())
+
+            elif user_choice == "2":
+                print(bee_elephant.trumpet())
+
+            elif user_choice == "3":
+
+                print("Вам нужно ввести число от 1 до 5. Это шаг, который будет вычитаться\n"
+                      "от части слона или пчелы в зависимости от того, чем вы покормите ПчёлоСлона;)")
+
+                while True:
+                    value_input = input("Введите значение от 1 до 5 (или Enter для выхода): ")
+                    if value_input == "":
+                        print("↩️ Возврат в главное меню!")
+                        break
+                    try:
+                        value_input = int(value_input)
+                        if 1 <= value_input <= 5:
+                            while True:
+                                meal_input = input("Введите еду для ПчёлоСлона (nectar или grass): ").strip()
+                                if meal_input == "nectar" or meal_input == "grass":
+                                    bee_elephant.eat(meal_input, value_input)
+                                    print(f"✅ Покормили {meal_input}. "
+                                          f"Текущее соотношение: "
+                                          f"Пчела {bee_elephant.bee_part} / Слон {bee_elephant.elephant_part}")
+                                    break
+                                else:
+                                    print("❌ Некорректная еда. Введите только nectar или grass")
+                        else:
+                            print("❌ Ошибка: число должно быть от 1 до 5!")
+                    except ValueError:
+                        print("❌ Ошибка: введите целое число!")
+
+            elif user_choice == "0":
+                print("↩️ Возврат в главное меню!")
+                break
+            else:
+                print("❌ Неверный выбор! Попробуйте снова.")
+
+
+
+
+
+
+
 
     elif user_choice == "0":
         print("👋 Пока!")
