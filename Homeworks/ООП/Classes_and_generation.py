@@ -1,3 +1,6 @@
+import random
+
+
 class Goods:
     def __init__(self, product_name, name_store, price):
         self.__product_name = product_name
@@ -117,6 +120,105 @@ class BeeElephant:
         return f"ПчёлоСлон с параметрами Пчела: {self.bee_part} / Слон: {self.elephant_part}"
 
 
+class Bus:
+    def __init__(self, max_seats=16, max_speed=120):
+        self.max_speed = max_speed
+        self.max_seats = max_seats
+        self.speed = 0
+        self.passengers = []
+        self.has_empty_seats = True
+        self.seats_map = {i: None for i in range(1, max_seats + 1)}
+
+
+    def accelerate(self, value):
+        if self.speed + value > self.max_speed:
+            print(f"⚠️ Ошибка: Скорость не может быть больше {self.max_speed} км/ч!\n"
+                  f"Текущая скорость не изменилась - {self.speed} км/ч.")
+        else:
+            self.speed += value
+            print(f"Скорость увеличена до {self.speed} км/ч")
+
+
+    def decelerate(self, value):
+        self.speed = max(self.speed - value, 0)
+        if self.speed == 0:
+            print("🛑 Автобус полностью остановлен!")
+        else:
+            print(f"Скорость снижена до {self.speed} км/ч")
+
+
+    def get_validate_speed_change(self, text):
+        while True:
+            try:
+                value = input(text).strip()
+                if value == "":
+                    print("❌ Ошибка: значение не может быть пустым!")
+                    print("Попробуйте снова.")
+                    continue
+                value = int(value)
+                if value < 0:
+                    print("❌ Ошибка: введите число больше 0!")
+                    continue
+                return value
+            except ValueError:
+                print("❌ Ошибка: введите целое число!")
+
+
+    def board(self, *names):
+        for name in names:
+            self.passengers.append(name)
+            for seat, passenger in self.seats_map.items():
+                if passenger is None:
+                    self.seats_map[seat] = name
+                    break
+            print(f"🚌 {name} сел в автобус.")
+            self._update_flag()
+        return True
+
+
+    def can_board(self, name):
+        if not self.has_empty_seats:
+            print(f"❌ Автобус заполнен! Посадка {name} не возможна.")
+            return False
+        if name in self.passengers:
+            print(f"❌ Пассажир {name} уже находится в автобусе!")
+            return False
+        return True
+
+    def alight(self, *names):
+        for name in names:
+            if name in self.passengers:
+                self.passengers.remove(name)
+                for seat, p in self.seats_map.items():
+                    if p == name:
+                        self.seats_map[seat] = None
+                print(f"🚶 {name} вышел из автобуса.")
+        self._update_flag()
+
+
+    def _update_flag(self):
+        self.has_empty_seats = len(self.passengers) < self.max_seats
+
+    def __str__(self):
+        return (f"🚍 Автобус (Скорость: {self.speed}/{self.max_speed})\n"
+                f"👥 Пассажиров: {len(self.passengers)}/{self.max_seats}\n"
+                f"📍 Свободные места: {'Есть' if self.has_empty_seats else 'Нет'}")
+
+
+    def __contains__(self, name):
+        return name in self.passengers
+
+
+    def __iadd__(self, name):
+        self.board(name)
+        return self
+
+
+    def __isub__(self, name):
+        self.alight(name)
+        return self
+
+
 def show_menu():
     print("1 - Товары на складе\n"
           "2 - ПчёлоСлон\n"
@@ -150,12 +252,34 @@ def create_default_warehouse():
     return warehouse
 
 
+def create_default_passengers():
+    my_bus = Bus()
+    names = ["Иванов", "Хмельницкий", "Фролов", "Мельникова", "Орлов", "Соколова", "Лебедев", "Кузнецов",
+                 "Малышева", "Бородина", "Собчак", "Прилучный", "Каримов"]
+    my_bus.passengers = names.copy()
+
+    return my_bus
+
+
 def show_menu_bee_elephant():
     print("=" * 40 + "\n"
           "Нажмите:\n"
           "1 - Чтобы узнать не меньше ли часть пчелы части слона\n"
           "2 - Проверка звука в зависимости от соотношения частей\n"
           "3 - Можно покормить пчелу словом nectar или слона словом grass\n"
+          "0 - Выход")
+    print("➤➤➤")
+
+
+def show_menu_bus():
+    print("=" * 40 + "\n"
+          "1 - Показать список пассажиров\n"
+          "2 - Случайное событие. Рандомная посадка / высадка пассажиров\n"
+          "3 - Увеличение скорости\n"
+          "4 - Уменьшение скорости\n"
+          "5 - Проверка по фамилии наличия пассажира в автобусе\n"
+          "6 - Посадка пассажиров по фамилии\n"
+          "7 - Высадка пассажиров по фамилии\n"
           "0 - Выход")
     print("➤➤➤")
 
@@ -377,11 +501,83 @@ while is_continue:
             else:
                 print("❌ Неверный выбор! Попробуйте снова.")
 
+    elif user_choice == "3":
 
+        bus_with_people = create_default_passengers()
 
+        while True:
+            show_menu_bus()
+            user_choice = input("Введите свой выбор здесь ➤ : ")
 
+            if user_choice == "1":
 
+                print(f"Максимальное количество мест в автобусе {bus_with_people.max_seats}")
+                print("🚍 Список пассажиров в автобусе:")
+                for i, name in enumerate(bus_with_people.passengers, start=1):
+                    print(f"{i}. {name}")
+                print()
 
+            elif user_choice == "2":
+                action = random.choice(["board", "alight"])
+
+                if action == "board":
+                    new_name = random.choice(["Новиков", "Волков", "Лебедев", "Карасёв", "Инкогнито"])
+                    bus_with_people += new_name
+                elif action == "alight" and bus_with_people.passengers:
+                    leaver = random.choice(bus_with_people.passengers)
+                    bus_with_people -= leaver
+
+            elif user_choice == "3":
+
+                speed_to_add = bus_with_people.get_validate_speed_change("Введите скорость для увеличения: ")
+                bus_with_people.accelerate(speed_to_add)
+
+            elif user_choice == "4":
+
+                speed_to_add = bus_with_people.get_validate_speed_change("Введите скорость для снижения: ")
+                bus_with_people.decelerate(speed_to_add)
+
+            elif user_choice == "5":
+
+                name = input("Введите фамилию пассажира для проверки наличия в автобусе: ").strip()
+                if name in bus_with_people:
+                    print(f"✅ Пассажир {name} числится в списке пассажиров")
+                else:
+                    print(f"❌ Пассажир {name} не числится в списке пассажиров")
+
+            elif user_choice == "6":
+
+                while True:
+                    name = input("Введите фамилию пассажира для посадки (или Enter для выхода): ").strip()
+                    if name == "":
+                        print("↩️ Возврат в главное меню!")
+                        break
+                    if bus_with_people.can_board(name):
+                        bus_with_people.board(name)
+                        if not bus_with_people.has_empty_seats:
+                            print("📢 Это было последнее место. Автобус заполнен!")
+                            break
+
+            elif user_choice == "7":
+
+                while True:
+                    name = input("Введите фамилию пассажира для высадки (или Enter для выхода): ").strip()
+                    if name == "":
+                        print("↩️ Возврат в главное меню!")
+                        break
+                    if name not in bus_with_people:
+                        print("❌ Такого пассажира в автобусе нет")
+                        print("Попробуйте снова.")
+                        continue
+                    else:
+                        bus_with_people.alight(name)
+                        break
+
+            elif user_choice == "0":
+                print("↩️ Возврат в главное меню!")
+                break
+            else:
+                print("❌ Неверный выбор! Попробуйте снова.")
 
 
     elif user_choice == "0":
