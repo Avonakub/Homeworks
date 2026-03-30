@@ -21,7 +21,7 @@ class Goods:
 
     @property
     def price(self):
-        return f"{self.__price} BYN"
+        return self.__price
 
 
     @name_store.setter
@@ -41,7 +41,11 @@ class Goods:
 
 
     def __add__(self, other):
-        return self.__price + other.__price
+        if isinstance(other, Goods):
+            return self.__price + other.__price
+        elif isinstance(other, (int, float)):
+            return self.__price + other
+        return NotImplemented
 
 
     def __str__(self):
@@ -62,14 +66,14 @@ class Warehouse:
             raise ValueError(f"❌ Такого индекса нет. Введите корректный индекс. Количество индексов "
                              f"до {len(self.__items) - 1} включительно")
         product = self.__items[product_index]
-        return f"Название: {product.product_name}\nМагазин: {product.name_store}\nЦена {product.price}"
+        return str(product)
 
 
     def output_by_name(self, name):
         for product in self.__items:
             if product.product_name.lower() == name.lower():
-                return f"Название: {product.product_name}\nМагазин: {product.name_store}\nЦена {product.price}"
-        raise ValueError("Товар не найден")
+                return str(product)
+        raise ValueError(f"Товар {name} не найден")
 
 
     def sort_by_name(self):
@@ -326,9 +330,10 @@ is_continue = True
 while is_continue:
     show_menu()  # Вызвали функцию показа общего меню
     user_choice = input("Введите свой выбор здесь ➤ : ")
+    warehouse = create_default_warehouse()
 
     if user_choice == "1":
-        warehouse = create_default_warehouse()
+
         while True:
             show_menu_goods() # Функция показа меню товаров
             user_choice = input("Введите свой выбор здесь ➤ : ")
@@ -408,6 +413,7 @@ while is_continue:
                                 continue
                             price = float(price)
                             new_goods = Goods(name, store, price)
+                            warehouse.add_product(new_goods)
                             print(f"✅ Товар '{name}' успешно добавлен!")
                             break
                         except ValueError as e:
@@ -423,7 +429,7 @@ while is_continue:
                 items = warehouse.get_all_items()
                 print("Доступные товары:")
                 for i, product in enumerate(items):
-                    print(f"{i}. {product.product_name} — {product.price}")
+                    print(f"{i}. {product.product_name} — {product.price} BYN")
                     print()
 
                 while True:
