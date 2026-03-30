@@ -219,6 +219,17 @@ class Bus:
         return self
 
 
+def repeat_elem(lst):
+    i = 0
+    while i < len(lst):
+        count = 1
+        while i + count < len(lst) and lst[i] == lst[i + count]:
+            count += 1
+        if count > 1:
+            yield [lst[i]] * count
+        i += count
+
+
 def show_menu():
     print("1 - Товары на складе\n"
           "2 - ПчёлоСлон\n"
@@ -579,6 +590,31 @@ while is_continue:
             else:
                 print("❌ Неверный выбор! Попробуйте снова.")
 
+    elif user_choice == "5":
+
+        numbers = []
+        while True:
+            value_input = input("Введите числа по одному (или Enter для выхода): ").strip()
+            if value_input == "":
+                print("↩️ Возврат в главное меню!")
+                break
+            try:
+                value = int(value_input)
+                numbers.append(value)
+                print(f"✅ Добавлено число {value}")
+            except ValueError:
+                print("❌ Ошибка: введите целое число!")
+        if not numbers:
+            print("Список пуст..")
+        else:
+            print(f"Ваш список: {numbers}")
+            groups = list(repeat_elem(numbers))
+            if groups:
+                print("Повторяющиеся группы:")
+                for group in groups:
+                    print(group)
+            else:
+                print("❌ Повторяющихся групп нет")
 
     elif user_choice == "0":
         print("👋 Пока!")
