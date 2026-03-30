@@ -1,4 +1,5 @@
 import random
+import os
 
 
 class Goods:
@@ -228,6 +229,32 @@ def repeat_elem(lst):
         if count > 1:
             yield [lst[i]] * count
         i += count
+
+
+def grep(filename, *patterns):
+
+    if not patterns:
+        patterns = ("INFO", "WARNING", "ERROR")
+
+    with open(filename, 'r', encoding='utf-8') as file:  # open() встроенная функция
+        capture = False
+        for line in file:
+            line = line.rstrip('\n')
+            found_pattern = None
+            for pattern in patterns:
+                if f'[{pattern}]' in line.upper():
+                    found_pattern = pattern
+                    break
+            if found_pattern:
+                capture = True
+                yield line
+            elif capture:
+                has_new_pattern = any(f'[{pattern}]' in line.upper() for pattern in patterns)
+
+                if has_new_pattern:
+                    capture = False
+                else:
+                    yield line
 
 
 def show_menu():
@@ -589,6 +616,30 @@ while is_continue:
                 break
             else:
                 print("❌ Неверный выбор! Попробуйте снова.")
+
+    elif user_choice == "4":
+
+        print("Для поиска ПАТТЕРНОВ в тексте добавьте текстовый файл в текущую директорию")
+        print(f"Текущая директория: {os.getcwd()}")
+        print("=" * 80 + "\n")
+
+        filename = input("Введите имя файла с текстом в формате .txt или оставьте строку пустой, чтобы выйти: ").strip()
+        if filename == "":
+            print("↩️ Возврат в главное меню!")
+            break
+        if filename == "":
+            print("↩️ Возврат в главное меню!")
+        elif not os.path.exists(filename):
+            print("❌ Файл не найден! Добавьте файл и попробуйте снова.")
+        else:
+            found_lines = list(grep(filename, "INFO", "WARNING", "ERROR"))
+
+            if found_lines:
+                print("✅ Найдены строки с паттернами:")
+                for line_error in found_lines:
+                    print(line_error)
+            else:
+                print("❌ ПАТТЕРНОВ не найдено!")
 
     elif user_choice == "5":
 
