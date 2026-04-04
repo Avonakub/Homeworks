@@ -245,3 +245,7 @@ insert into branch(bank_id, name) values
     (3, 'РКЦ № 12'),
     (3, 'РКЦ № 67'),
     (3, 'РКЦ № 34');
+
+
+ -- добавление колонки сотрудникам для связи с филиалом
+alter table employee add column branch_id integer references branch(id) on delete set null;
