@@ -328,3 +328,13 @@ select bank_id, branch_id, first_name, last_name, patronymic, position, passport
 
 -- просмотр сотрудников, где айди банка 3 - БНБ
 select bank_id, branch_id, first_name, last_name, patronymic, position, passport_number from employee where bank_id = 3;
+
+
+-- таблица связи один ко многим, где 1 сотрудник может обслуживать многих клиентов
+create table if not exists one_to_many_employee_clients(
+	client_id integer references clients(id) on delete cascade,
+	employee_id integer references employee(id) on delete set null,
+	bank_id integer references bank(id) on delete cascade,
+	branch_id integer references branch(id) on delete cascade,
+	primary key (client_id, employee_id)
+);
