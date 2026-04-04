@@ -576,3 +576,15 @@ insert into one_to_many_employee_hierarchy(chief_id, subordinate_id) values
 	(34, 35),
 	(34, 36),
 	(34, 37);
+
+
+-- проверка, кто начальник у сотрудника с айди 3
+select
+	chief.first_name as Имя_начальника,
+    chief.last_name as Фамилия_начальника,
+    subordinate.first_name as Имя_подчиненного,
+    subordinate.last_name as Фамилия_подчиненного
+from one_to_many_employee_hierarchy
+join employee chief on one_to_many_employee_hierarchy.chief_id = chief.id
+join employee subordinate on one_to_many_employee_hierarchy.subordinate_id = subordinate.id
+where subordinate.id = 3;
