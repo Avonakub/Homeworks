@@ -486,3 +486,29 @@ join branch on employee.branch_id = branch.id
 where employee.bank_id = 1
 group by branch.id, branch.name
 order by branch.name;
+
+
+-- подсчет количества сотрудников у клиента
+select
+    clients.id as id_клиента,
+    clients.first_name as Имя_клиента,
+    clients.last_name as Фамилия_клиента,
+    clients.patronymic as Отчество_клиента,
+    count(one_to_many_employee_clients.employee_id) as Количество_сотрудников
+from clients
+inner join one_to_many_employee_clients on clients.id = one_to_many_employee_clients.client_id
+group by clients.id, clients.first_name, clients.last_name, clients.patronymic;
+
+
+-- подсчет количества клиентов у сотрудника
+select
+    employee.id as ID_сотрудника,
+    employee.first_name as Имя_сотрудника,
+    employee.last_name as Фамилия_сотрудника,
+    employee.patronymic as Отчество_сотрудника,
+    employee.position as Должность_сотрудника,
+    count(one_to_many_employee_clients.client_id) as Количество_клиентов
+from employee
+left join one_to_many_employee_clients on employee.id = one_to_many_employee_clients.employee_id
+group by employee.id, employee.first_name, employee.last_name, employee.patronymic, employee.position
+order by Количество_клиентов desc;
