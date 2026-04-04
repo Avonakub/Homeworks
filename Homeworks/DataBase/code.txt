@@ -1,0 +1,10 @@
+-- создание базы данных bank
+create database bank;
+
+
+-- создание таблицы bank
+create table if not exists bank (
+	id serial primary key,
+	name varchar(50)
+);
+
