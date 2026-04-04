@@ -502,7 +502,7 @@ group by clients.id, clients.first_name, clients.last_name, clients.patronymic;
 
 -- подсчет количества клиентов у сотрудника
 select
-    employee.id as ID_сотрудника,
+    employee.id as id_сотрудника,
     employee.first_name as Имя_сотрудника,
     employee.last_name as Фамилия_сотрудника,
     employee.patronymic as Отчество_сотрудника,
@@ -512,3 +512,12 @@ from employee
 left join one_to_many_employee_clients on employee.id = one_to_many_employee_clients.employee_id
 group by employee.id, employee.first_name, employee.last_name, employee.patronymic, employee.position
 order by Количество_клиентов desc;
+
+
+-- связь один ко многим, где у разных сотрудников может быть 1 начальник
+create table if not exists one_to_many_employee_hierarchy(
+	id serial primary key,
+	chief_id integer references employee(id) on delete set null, --  айди начальника
+	subordinate_id integer references employee(id) on delete cascade, -- айди подчиненного
+	unique(chief_id, subordinate_id)
+);
