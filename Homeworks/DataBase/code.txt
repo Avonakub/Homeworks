@@ -320,3 +320,11 @@ insert into employee(bank_id, branch_id, first_name, last_name, patronymic, posi
     (3, 9, 'Ксения', 'Евгеньевна', 'Андреева', 'Кассир', 'MP4445556', '+375295567890'),
     (3, 9, 'Екатерина', 'Андреевна', 'Николаева', 'Главный специалист', 'MP5566778', '+375295567891'),
     (3, 9, 'Инна', 'Петровна', 'Белова', 'Ведущий специалист', 'HB4455667', '+375295567892');
+
+
+-- просмотр сотрудников, где айди филиала 3
+select bank_id, branch_id, first_name, last_name, patronymic, position, passport_number from employee where branch_id = 3;
+
+
+-- просмотр сотрудников, где айди банка 3 - БНБ
+select bank_id, branch_id, first_name, last_name, patronymic, position, passport_number from employee where bank_id = 3;
