@@ -466,7 +466,6 @@ insert into one_to_many_employee_clients(client_id, employee_id, bank_id, branch
 	(6, 37, 3, 9);
 
 
-
 -- просмотр сколько клиентов у каждого сотрудника
 select
     employee.first_name as Имя_сотрудника,
@@ -476,3 +475,14 @@ from employee
 left join one_to_many_employee_clients on employee.id = one_to_many_employee_clients.employee_id
 group by employee.id, employee.first_name, employee.last_name
 order by Количество_клиентов desc;
+
+
+-- подсчет общего количества сотрудников по филиалам МТБанка
+select
+    branch.name as Название_филиала,
+    count(employee.id) as Количество_сотрудников
+from employee
+join branch on employee.branch_id = branch.id
+where employee.bank_id = 1
+group by branch.id, branch.name
+order by branch.name;
