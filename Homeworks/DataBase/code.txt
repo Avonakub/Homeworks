@@ -216,3 +216,11 @@ create table if not exists employee(
     passport_number varchar(20),
     phone varchar(20)
 );
+
+
+-- создание филиалов у банка (цбу, ркц, оп)
+create table if not exists branch(
+	id serial primary key,
+	bank_id integer references bank (id) on delete cascade,
+	name varchar(100)
+);
