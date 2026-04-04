@@ -249,3 +249,13 @@ insert into branch(bank_id, name) values
 
  -- добавление колонки сотрудникам для связи с филиалом
 alter table employee add column branch_id integer references branch(id) on delete set null;
+
+
+-- смотрим структуру таблицы employee: какие колонки есть и какие у них типы данных
+-- information_schema.columns - системная таблица, которая хранит информацию о всех колонках в базе данных
+-- column_name - название колонки
+-- data_type - тип данных колонки (integer, varchar, date и т.д.)
+-- where table_name = 'employee' - фильтр, показываем только колонки из таблицы employee
+select column_name, data_type
+from information_schema.columns
+where table_name = 'employee';
