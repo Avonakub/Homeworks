@@ -588,3 +588,14 @@ from one_to_many_employee_hierarchy
 join employee chief on one_to_many_employee_hierarchy.chief_id = chief.id
 join employee subordinate on one_to_many_employee_hierarchy.subordinate_id = subordinate.id
 where subordinate.id = 3;
+
+
+-- история посещений клиентами разных филиалов
+create table if not exists m2m_client_visits (
+    client_id integer references clients(id) on delete cascade,
+    branch_id integer references branch(id) on delete cascade,
+    visit_date timestamp default current_timestamp,
+    service_type varchar(100),
+    employee_id integer references employee(id) on delete set null,
+    primary key (client_id, branch_id, visit_date)
+);
