@@ -629,3 +629,26 @@ insert into m2m_client_visits (client_id, branch_id, service_type, visit_date, e
 	(10, 1, 'Открытие депозита', '2025-02-08', 5),
 
 	(11, 2, 'Снятие процентов', '2025-02-12', 8);
+
+
+-- проверка кто, когда и по каким вопросам обслуживался у сотрудника
+select
+    clients.first_name as Имя_клиента,
+    clients.last_name as Фамилия_клиента,
+    clients.patronymic as Отчество_клиента,
+    employee.first_name as Имя_сотрудника,
+    employee.last_name as Фамилия_сотрудника,
+    employee.patronymic as Отчество_сотрудника,
+    employee.position as Должность_сотрудника,
+    branch.name as Название_филиала,
+    m2m_client_visits.service_type as Название_операции,
+    m2m_client_visits.visit_date as Дата
+from m2m_client_visits
+right join clients on m2m_client_visits.client_id = clients.id
+right join employee on m2m_client_visits.employee_id = employee.id
+right join branch on m2m_client_visits.branch_id = branch.id
+where m2m_client_visits.client_id = 1;
+
+
+-- изменение типа колонки на обычную дату
+alter table m2m_client_visits alter column visit_date type date;
